@@ -50,12 +50,15 @@ import { useRouter } from "vue-router";
 const errorMessage = ref(""); // Estado para mensagens de erro
 const router = useRouter();
 const visible = ref(false);
-let emailsucesso = false; //constante para verificar o sucesso do email
 
 //campos do formulario de login
 const form = ref({
     email: "",
     password: "",
+})
+
+const valid = ref({
+    email: false, //constante para verificar o sucesso do email
 })
 
 
@@ -64,7 +67,7 @@ async function postLogin() {
     errorMessage.value = ""; // Resetar mensagem de erro
 
     try {
-        if (!emailsucesso) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais."; //exibe um alert, caso o email esteja na formatacao incorreta
+        if (!valid.value) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais."; //exibe um alert, caso o email esteja na formatacao incorreta
 
         //faz a requisicao post para a api
         const response = await axios.post("/login", {
@@ -85,7 +88,7 @@ async function postLogin() {
         //time out da duracao do alert 
         setTimeout(() => {
             errorMessage.value = "";
-        }, 3000);
+        }, 5000);
 
     }
 };
@@ -101,7 +104,7 @@ function emailIsValid(value: string) {
     if (!regex.test(value)) {
         return "Email inválido"
     }
-    emailsucesso = true;
+    valid.value.email = true;
     return true;
 };
 

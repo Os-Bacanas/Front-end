@@ -5,6 +5,11 @@
 
                 <div class="text-h5  text-center text-grey-darken-1">CADASTRO</div>
 
+                <!-- Exibir mensagem de erro caso ocorra -->
+                <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
+                    {{ errorMessage }}
+                </v-alert>
+
                 <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
                 <v-text-field v-model="form.nome" density="compact" placeholder="Nome do usuário" variant="outlined"
                     :rules="[required]" prepend-inner-icon="mdi-account-outline"></v-text-field>
@@ -36,7 +41,7 @@
                     :rules="[required, value => confirmPasswordIsValid(value, form.password)]"></v-text-field>
 
 
-                <v-btn class="mt-3" color="blue" size="large" variant="tonal" block to="/login">Cadastra-se</v-btn>
+                <v-btn class="mt-3" color="blue" size="large" variant="tonal" block @click="postCadastro" :disabled="!form.nome|| !form.cpf || !form.email || !form.password || !form.confirmPassword">Cadastra-se</v-btn>
 
                 <v-card-text class="text-end pt-10 mb-n5">
                     <router-link to="/login" class="text-blue-lighten-1 text-decoration-none"
@@ -50,6 +55,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import axios from "../services/api";
+import { useRouter } from "vue-router";
+
+
+const errorMessage = ref(""); // Estado para mensagens de erro
+const router = useRouter();
 const visible = ref(false);
 
 const form = ref({
@@ -60,6 +71,39 @@ const form = ref({
     confirmPassword: ""
 })
 
+const valid = ref({
+    cpf: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+})
+
+async function postCadastro() {
+    errorMessage.value = ""; // Resetar mensagem de erro
+
+    try {
+        if (!valid.value.cpf || !valid.value.email || !valid.value.password || !valid.value.confirmPassword) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais."; //exibe um alert, caso o email esteja na formatacao incorreta
+
+        //faz a requisicao post para a api
+        const response = await axios.post("/cadastro", {
+            email: form.value.email,
+            password: form.value.password,
+        });
+
+        //redimenciona para a tela principal
+        router.push("/login");
+    } catch (error) {
+        //exibe um alert de erro
+        errorMessage.value = "Erro ao fazer cadastro. Tente mais tarde.";
+
+    } finally {
+        //time out da duracao do alert 
+        setTimeout(() => {
+            errorMessage.value = "";
+        }, 5000);
+
+    }
+};
 
 function required(value: string) {
     return value ? true : 'O campo é obrigatório'
@@ -67,13 +111,18 @@ function required(value: string) {
 
 function emailIsValid(value: string) {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (regex.test(value)) return true
+    if (regex.test(value)){
+        valid.value.email = true
+        return true
+    }
+
     return "Email inválido"
 }
 
 function cpfIsValid(value: string) {
     const cleanCPF = value.replace(/\D/g, ""); // remove pontos e tracos 
     if (cleanCPF.length !== 11) return 'CPF inválido'
+    valid.value.cpf= true
     return true;
 }
 
@@ -83,11 +132,13 @@ function passwordIsValid(value: string) {
     if (!/[A-Z]/.test(value)) return 'A senha deve conter pelo menos uma letra maiúscula';
     if (!/[0-9]/.test(value)) return 'A senha deve conter pelo menos um número';
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) return 'A senha deve conter pelo menos um caractere especial';
+    valid.value.password = true
     return true;
 }
 
 function confirmPasswordIsValid(value: string, password: string) {
     if (value !== password) return 'A senha deve ser igual'
+    valid.value.confirmPassword = true
     return true;
 }
 
