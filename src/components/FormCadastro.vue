@@ -30,13 +30,14 @@
 
 
                 <div class="text-subtitle-1 text-medium-emphasis">Confirmar senha</div>
-                <v-text-field v-model="form.confirmPassword" @click:append-inner="toggleVisibility" :type="visible ? 'text' : 'password'"
-                    density="compact" placeholder="Confirme sua senha" prepend-inner-icon="mdi-lock-outline"
-                    variant="outlined" :rules="[required, value => confirmPasswordIsValid(value, form.password)]"></v-text-field>
+                <v-text-field v-model="form.confirmPassword" @click:append-inner="toggleVisibility"
+                    :type="visible ? 'text' : 'password'" density="compact" placeholder="Confirme sua senha"
+                    prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                    :rules="[required, value => confirmPasswordIsValid(value, form.password)]"></v-text-field>
 
 
                 <v-btn class="mt-3" color="blue" size="large" variant="tonal" block to="/login">Cadastra-se</v-btn>
-                
+
                 <v-card-text class="text-end pt-10 mb-n5">
                     <router-link to="/login" class="text-blue-lighten-1 text-decoration-none"
                         rel="noopener noreferrer">Entrar<v-icon icon="mdi-chevron-right"></v-icon></router-link>
@@ -72,7 +73,6 @@ function emailIsValid(value: string) {
 
 function cpfIsValid(value: string) {
     const cleanCPF = value.replace(/\D/g, ""); // remove pontos e tracos 
-
     if (cleanCPF.length !== 11) return 'CPF inválido'
     return true;
 }
@@ -87,7 +87,6 @@ function passwordIsValid(value: string) {
 }
 
 function confirmPasswordIsValid(value: string, password: string) {
-
     if (value !== password) return 'A senha deve ser igual'
     return true;
 }
