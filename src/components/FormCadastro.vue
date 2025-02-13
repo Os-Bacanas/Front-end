@@ -18,8 +18,7 @@
 
                 <div class="text-subtitle-1 text-medium-emphasis">CPF</div>
                 <v-text-field v-model="form.cpf" density="compact" placeholder="CPF" variant="outlined"
-                    :rules="[required,cpfIsValid]"
-                    prepend-inner-icon="mdi-card-account-details-outline"></v-text-field>
+                    :rules="[required, cpfIsValid]" prepend-inner-icon="mdi-card-account-details-outline"></v-text-field>
 
 
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
@@ -58,8 +57,8 @@
 </template>
 
 <script lang="ts" setup>
-import {required, emailIsValid, cpfIsValid, passwordIsValid, confirmPasswordIsValid} from "../services/Validacao"
-import {form, valid} from '../services/Campos'
+import { required, emailIsValid, cpfIsValid, passwordIsValid, confirmPasswordIsValid } from "../services/Validacao"
+import { form, valid } from '../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { ref } from 'vue';
 import axios from "../services/api";
@@ -72,7 +71,7 @@ async function postCadastro() {
     errorMessage.value = ""; // Resetar mensagem de erro
 
     try {
-        if (!valid.value.cpf || !valid.value.email || !valid.value.password || !valid.value.confirmPassword) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais."; //exibe um alert, caso o email esteja na formatacao incorreta
+        if (!valid.value) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais."; //exibe um alert, caso o email esteja na formatacao incorreta
 
         //faz a requisicao post para a api
         const response = await axios.post("/cadastro", {

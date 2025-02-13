@@ -11,6 +11,7 @@ declare module 'vue' {
     DialogSave: typeof import('./src/components/DialogSave.vue')['default']
     FormCadastro: typeof import('./src/components/FormCadastro.vue')['default']
     FormLogin: typeof import('./src/components/FormLogin.vue')['default']
+    LoaderLinear: typeof import('./src/components/LoaderLinear.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sair: typeof import('./src/components/Sair.vue')['default']
