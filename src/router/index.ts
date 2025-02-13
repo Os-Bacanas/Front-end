@@ -9,9 +9,9 @@ import Cadastro from '@/pages/Cadastro.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { 
-      path: '/login', 
-      component: Login 
+    {
+      path: '/login',
+      component: Login
     },
     {
       path: '/cadastro',

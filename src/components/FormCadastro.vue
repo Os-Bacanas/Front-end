@@ -1,4 +1,5 @@
 <template>
+
     <v-container class="fill-height d-flex justify-center">
         <div class="h-15 w-100">
             <v-card class="mx-auto pa-12 pb-8" elevation="6" max-width="448" rounded="lg">
@@ -41,23 +42,25 @@
                     :rules="[required, value => confirmPasswordIsValid(value, form.password)]"></v-text-field>
 
 
-                <v-btn class="mt-3" color="blue" size="large" variant="tonal" block @click="postCadastro" :disabled="!form.nome|| !form.cpf || !form.email || !form.password || !form.confirmPassword">Cadastra-se</v-btn>
+                <v-btn class="mt-3" color="blue" size="large" variant="tonal" block @click="postCadastro"
+                    :disabled="!form.nome || !form.cpf || !form.email || !form.password || !form.confirmPassword">Cadastra-se</v-btn>
+
 
                 <v-card-text class="text-end pt-10 mb-n5">
                     <router-link to="/login" class="text-blue-lighten-1 text-decoration-none"
-                        rel="noopener noreferrer">Entrar<v-icon icon="mdi-chevron-right"></v-icon></router-link>
-
+                        rel="noopener noreferrer"><v-icon icon="mdi-chevron-left"></v-icon>Entrar</router-link>
                 </v-card-text>
+
             </v-card>
         </div>
     </v-container>
+
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
 import axios from "../services/api";
 import { useRouter } from "vue-router";
-
 
 const errorMessage = ref(""); // Estado para mensagens de erro
 const router = useRouter();
@@ -111,7 +114,7 @@ function required(value: string) {
 
 function emailIsValid(value: string) {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (regex.test(value)){
+    if (regex.test(value)) {
         valid.value.email = true
         return true
     }
@@ -122,7 +125,7 @@ function emailIsValid(value: string) {
 function cpfIsValid(value: string) {
     const cleanCPF = value.replace(/\D/g, ""); // remove pontos e tracos 
     if (cleanCPF.length !== 11) return 'CPF inválido'
-    valid.value.cpf= true
+    valid.value.cpf = true
     return true;
 }
 

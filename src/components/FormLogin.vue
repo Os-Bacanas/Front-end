@@ -1,4 +1,5 @@
 <template>
+
     <v-container class="fill-height d-flex justify-center ">
         <div class="h-50 w-100">
             <v-card class="mx-auto pa-12 pb-8" elevation="6" max-width="448" rounded="lg">
@@ -24,9 +25,8 @@
                     variant="outlined" :rules="[required]"></v-text-field>
 
 
-                <v-btn class="mt-3" color="blue" size="large" variant="tonal" block 
-                    :disabled="!form.email || !form.password" to="/">Entrar</v-btn>
-
+                <v-btn class="mt-3" color="blue" size="large" variant="tonal" block
+                    :disabled="!form.email || !form.password" @click="postLogin">Entrar</v-btn>
 
 
                 <v-card-text class="text-end pt-10 mb-n5">
@@ -37,15 +37,14 @@
             </v-card>
         </div>
     </v-container>
-</template>
 
+</template>
 
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import axios from "../services/api";
 import { useRouter } from "vue-router";
-
 
 const errorMessage = ref(""); // Estado para mensagens de erro
 const router = useRouter();
@@ -70,7 +69,7 @@ async function postLogin() {
         if (!valid.value) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais."; //exibe um alert, caso o email esteja na formatacao incorreta
 
         //faz a requisicao post para a api
-        const response = await axios.post("/login", {
+        const response = await axios.post("/users", {
             email: form.value.email,
             password: form.value.password,
         });
@@ -119,7 +118,7 @@ onMounted(() => {
 
     if (token) {
         // Se o token estiver no localStorage, redireciona o usuário para o dashboard
-        router.push("/");
+        router.push("/usuarios");
     }
 });
 
