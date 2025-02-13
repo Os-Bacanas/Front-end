@@ -42,24 +42,15 @@
 
 
 <script lang="ts" setup>
+import {required, emailIsValid} from "../services/Validacao"
+import {form, valid} from '../services/Campos'
+import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { ref, onMounted } from 'vue';
 import axios from "../services/api";
 import { useRouter } from "vue-router";
 
 const errorMessage = ref(""); // Estado para mensagens de erro
 const router = useRouter();
-const visible = ref(false);
-
-//campos do formulario de login
-const form = ref({
-    email: "",
-    password: "",
-})
-
-const valid = ref({
-    email: false, //constante para verificar o sucesso do email
-})
-
 
 //requisicao API ao clicar no botao ENTRAR - devemos adiconar o @click para chamar a funcao e devemos remover o to:"/" no btn (fiz essas alteraceos pq a api nao esta pronta)
 async function postLogin() {
@@ -90,26 +81,6 @@ async function postLogin() {
         }, 5000);
 
     }
-};
-
-//verifica se os campos de email e senha foram preencidos
-function required(value: string) {
-    return value ? true : 'O campo é obrigatório'
-};
-
-//verifica se o email é valido
-function emailIsValid(value: string) {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!regex.test(value)) {
-        return "Email inválido"
-    }
-    valid.value.email = true;
-    return true;
-};
-
-//muda a visibilidade do icone da senha
-const toggleVisibility = () => {
-    visible.value = !visible.value;
 };
 
 // Verificar login automático ao carregar a página

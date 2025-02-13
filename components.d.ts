@@ -7,10 +7,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Cadastro: typeof import('./src/components/cadastro.vue')['default']
+    DialogSave: typeof import('./src/components/DialogSave.vue')['default']
     FormCadastro: typeof import('./src/components/FormCadastro.vue')['default']
     FormLogin: typeof import('./src/components/FormLogin.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sair: typeof import('./src/components/Sair.vue')['default']
+    Salvar: typeof import('./src/components/Salvar.vue')['default']
+    Save: typeof import('./src/components/Save.vue')['default']
+    Seila: typeof import('./src/components/Seila.vue')['default']
+    Table: typeof import('./src/components/Table.vue')['default']
   }
 }
