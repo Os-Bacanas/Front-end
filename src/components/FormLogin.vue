@@ -49,8 +49,8 @@ import axios from "../services/api";
 import { useRouter } from "vue-router";
 import { jwtDecode } from "jwt-decode";
 import { getToken, type CustomJwtPayload } from '@/services/LocalStorageVerification';
+import { clean, errorMessage } from "@/services/Clean";
 
-const errorMessage = ref("");
 const router = useRouter();
 
 async function postLogin() {
@@ -79,6 +79,7 @@ async function postLogin() {
 };
 
 onMounted(() => {
+    clean(form);
     if (getToken) {
         try {
             const decodedToken = jwtDecode<CustomJwtPayload>(getToken);

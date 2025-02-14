@@ -9,8 +9,8 @@
         <v-card prepend-icon="mdi-account" title="Salvar Usuário">
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
-                {{ errorMessage }}
-            </v-alert>
+        {{ errorMessage }}
+    </v-alert>
 
             <v-card-text>
                 <v-row dense>

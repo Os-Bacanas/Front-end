@@ -12,6 +12,7 @@ declare module 'vue' {
     DialogDeleteAll: typeof import('./src/components/dialog/DialogDeleteAll.vue')['default']
     DialogEdit: typeof import('./src/components/dialog/DialogEdit.vue')['default']
     DialogSave: typeof import('./src/components/dialog/DialogSave.vue')['default']
+    Error: typeof import('./src/components/Error.vue')['default']
     ErrorMensage: typeof import('./src/components/ErrorMensage.vue')['default']
     FormCadastro: typeof import('./src/components/FormCadastro.vue')['default']
     FormLogin: typeof import('./src/components/FormLogin.vue')['default']
@@ -25,5 +26,6 @@ declare module 'vue' {
     Table: typeof import('./src/components/Table.vue')['default']
     TablePessoas: typeof import('./src/components/TablePessoas.vue')['default']
     TableUsuarios: typeof import('./src/components/TableUsuarios.vue')['default']
+    TemplateError: typeof import('./src/components/TemplateError.vue')['default']
   }
 }

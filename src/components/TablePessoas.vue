@@ -51,10 +51,21 @@ import DialogSave from './dialog/DialogSave.vue';
 import DialogEdit from './dialog/DialogEdit.vue';
 import DialogDelete from './dialog/DialogDelete.vue';
 import DialogDeleteAll from './dialog/DialogDeleteAll.vue';
-import { sentinela, itemsPerPage, isLoading, displayedCount, type UsuarioPessoa } from '@/services/ScriptTables';
 
 const pessoas = ref<UsuarioPessoa[]>([]);
 const displayedPessoas = computed(() => pessoas.value.slice(0, displayedCount.value));
+
+ const itemsPerPage = 5; 
+ const displayedCount = ref(itemsPerPage);
+ const isLoading = ref(false);
+ const sentinela = ref<HTMLElement | null>(null);
+
+ interface UsuarioPessoa {
+    id: number;
+    name: string;
+    email: string;
+    cpf: string;
+}
 
 async function fetchPessoas() {
     try {

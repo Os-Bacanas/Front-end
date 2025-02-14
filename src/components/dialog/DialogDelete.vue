@@ -9,6 +9,7 @@
                 <v-card-subtitle>Não será possível recuperar os dados</v-card-subtitle>
             </v-card-title>
 
+
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}
             </v-alert>

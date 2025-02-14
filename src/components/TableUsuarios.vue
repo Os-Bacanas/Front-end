@@ -36,18 +36,29 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
-import { sentinela, itemsPerPage, isLoading, displayedCount, type UsuarioPessoa } from '@/services/ScriptTables';
 
 
 
-const usuarios = ref<UsuarioPessoa[]>([]);
+const usuarios = ref<Usuario[]>([]);
 const displayedUsuarios = computed(() => usuarios.value.slice(0, displayedCount.value));
 
+
+const itemsPerPage = 5;
+const displayedCount = ref(itemsPerPage);
+const isLoading = ref(false);
+const sentinela = ref<HTMLElement | null>(null);
+
+interface Usuario {
+    id: number;
+    name: string;
+    email: string;
+    cpf: string;
+}
 
 async function fetchUsuarios() {
     try {
         isLoading.value = true;
-        const response = await axios.get<UsuarioPessoa[]>('/users');
+        const response = await axios.get<Usuario[]>('/users');
         usuarios.value = response.data;
     } catch (error) {
         console.log('Erro ao buscar usuários: ', error);

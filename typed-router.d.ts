@@ -21,10 +21,6 @@ declare module 'vue-router/auto-routes' {
     '/Cadastro': RouteRecordInfo<'/Cadastro', '/Cadastro', Record<never, never>, Record<never, never>>,
     '/Login': RouteRecordInfo<'/Login', '/Login', Record<never, never>, Record<never, never>>,
     '/Pessoa': RouteRecordInfo<'/Pessoa', '/Pessoa', Record<never, never>, Record<never, never>>,
-    '/pessoas/Cadastrar': RouteRecordInfo<'/pessoas/Cadastrar', '/pessoas/Cadastrar', Record<never, never>, Record<never, never>>,
-    '/pessoas/Deletar': RouteRecordInfo<'/pessoas/Deletar', '/pessoas/Deletar', Record<never, never>, Record<never, never>>,
-    '/pessoas/Editar': RouteRecordInfo<'/pessoas/Editar', '/pessoas/Editar', Record<never, never>, Record<never, never>>,
-    '/pessoas/Index': RouteRecordInfo<'/pessoas/Index', '/pessoas/Index', Record<never, never>, Record<never, never>>,
     '/Usuario': RouteRecordInfo<'/Usuario', '/Usuario', Record<never, never>, Record<never, never>>,
   }
 }

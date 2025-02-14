@@ -6,7 +6,9 @@
 
                 <div class="text-h5  text-center text-grey-darken-1">CADASTRO</div>
 
-                <ErrorMensage></ErrorMensage>
+                <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
+                    {{ errorMessage }}
+                </v-alert>
 
                 <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
                 <v-text-field v-model="form.nome" density="compact" placeholder="Nome do usuário" variant="outlined"
@@ -60,8 +62,8 @@ import { form, valid } from '../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import axios from "../services/api";
 import { useRouter } from "vue-router";
-import { errorMessage, ErrorMensage } from "./ErrorMensage.vue";
-
+import { ref, onMounted } from "vue";
+import { clean, errorMessage } from "@/services/Clean";
 
 const router = useRouter();
 
@@ -89,4 +91,8 @@ async function postCadastro() {
 
     }
 };
+
+onMounted(() => {
+    clean(form);
+});
 </script>
