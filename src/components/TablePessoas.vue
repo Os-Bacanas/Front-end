@@ -19,22 +19,23 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr v-if="displayedPessoas.length === 0">
+                            <td colspan="6" class="text-center">Nenhuma pessoa cadastrada</td>
+                        </tr>
                         <tr v-for="(pessoa, index) in displayedPessoas" :key="index">
                             <td>{{ pessoa.id }}</td>
                             <td>{{ pessoa.name }}</td>
                             <td>{{ pessoa.email }}</td>
                             <td>{{ pessoa.cpf }}</td>
                             <td class="no-widht">
-                                <DialogEdit></DialogEdit>
+                                <DialogEdit :pessoa="pessoa" />
                             </td>
                             <td class="no-widht">
-                                <DialogDelete></DialogDelete>
+                                <DialogDelete :pessoaId="pessoa.id" @deleted="handleDelete" />
                             </td>
-
                         </tr>
-                        <!-- Elemento sentinela para ativar o carregamento -->
                         <tr v-if="isLoading" ref="sentinela">
-                            <td colspan="4" class="text-center">Carregando...</td>
+                            <td colspan="6" class="text-center">Carregando...</td>
                         </tr>
                     </tbody>
                 </v-table>
@@ -50,46 +51,36 @@ import DialogSave from './dialog/DialogSave.vue';
 import DialogEdit from './dialog/DialogEdit.vue';
 import DialogDelete from './dialog/DialogDelete.vue';
 import DialogDeleteAll from './dialog/DialogDeleteAll.vue';
+import { sentinela, itemsPerPage, isLoading, displayedCount, type UsuarioPessoa } from '@/services/ScriptTables';
 
-
-// Definindo tipos e variáveis reativas
-interface Pessoa {
-    id: number;
-    name: string;
-    email: string;
-    cpf: string;
-}
-
-const pessoas = ref<Pessoa[]>([]);
-const itemsPerPage = 10;
-const displayedCount = ref(itemsPerPage);
-const isLoading = ref(false); // Controle do estado de carregamento
-const sentinela = ref<HTMLElement | null>(null);
-
-// Computed para exibir apenas as pessoas necessárias
+const pessoas = ref<UsuarioPessoa[]>([]);
 const displayedPessoas = computed(() => pessoas.value.slice(0, displayedCount.value));
 
-// Função para buscar pessoas da API
 async function fetchPessoas() {
     try {
         isLoading.value = true;
-        const response = await axios.get<Pessoa[]>('/people');
+        const response = await axios.get<UsuarioPessoa[]>('/people');
         pessoas.value = response.data;
     } catch (error) {
-        console.log('Erro ao buscar usuários: ', error);
+        console.log('Erro ao buscar pessoas: ', error);
     } finally {
         isLoading.value = false;
     }
 };
 
-// Função para carregar mais pessoas quando o sentinela é atingido
+
 function loadMorePessoas() {
     if (displayedCount.value < pessoas.value.length) {
         displayedCount.value += itemsPerPage;
     }
 };
 
-// Configuração do Intersection Observer para detectar o sentinela
+
+function handleDelete(deletedId: number) {
+    pessoas.value = pessoas.value.filter((pessoa) => pessoa.id !== deletedId);
+};
+
+
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !isLoading.value) {
         loadMorePessoas();
@@ -104,10 +95,6 @@ onMounted(() => {
     if (sentinela.value) {
         observer.observe(sentinela.value);
     }
-});
-
-onUnmounted(() => {
-    observer.disconnect();
 });
 
 </script>

@@ -6,10 +6,7 @@
 
                 <div class="text-h5  text-center text-grey-darken-1">CADASTRO</div>
 
-                <!-- Exibir mensagem de erro caso ocorra -->
-                <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
-                    {{ errorMessage }}
-                </v-alert>
+                <ErrorMensage></ErrorMensage>
 
                 <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
                 <v-text-field v-model="form.nome" density="compact" placeholder="Nome do usuário" variant="outlined"
@@ -18,7 +15,8 @@
 
                 <div class="text-subtitle-1 text-medium-emphasis">CPF</div>
                 <v-text-field v-model="form.cpf" density="compact" placeholder="CPF" variant="outlined"
-                    :rules="[required, cpfIsValid]" prepend-inner-icon="mdi-card-account-details-outline"></v-text-field>
+                    :rules="[required, cpfIsValid]"
+                    prepend-inner-icon="mdi-card-account-details-outline"></v-text-field>
 
 
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
@@ -60,41 +58,35 @@
 import { required, emailIsValid, cpfIsValid, passwordIsValid, confirmPasswordIsValid } from "../services/Validacao"
 import { form, valid } from '../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
-import { ref } from 'vue';
 import axios from "../services/api";
 import { useRouter } from "vue-router";
+import { errorMessage, ErrorMensage } from "./ErrorMensage.vue";
 
-const errorMessage = ref(""); // Estado para mensagens de erro
+
 const router = useRouter();
 
 async function postCadastro() {
-    errorMessage.value = ""; // Resetar mensagem de erro
+    errorMessage.value = "";
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais."; //exibe um alert, caso o email esteja na formatacao incorreta
+        if (!valid.value) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais.";
 
-        //faz a requisicao post para a api
-        const response = await axios.post("/cadastro", {
+        await axios.post("/cadastro", {
             nome: form.value.nome,
             cpf: form.value.cpf,
             email: form.value.email,
             password: form.value.password,
         });
 
-        //redimenciona para a tela principal
         router.push("/login");
     } catch (error) {
-        //exibe um alert de erro
         errorMessage.value = "Erro ao fazer cadastro. Tente mais tarde.";
 
     } finally {
-        //time out da duracao do alert 
         setTimeout(() => {
             errorMessage.value = "";
         }, 5000);
 
     }
 };
-
-
 </script>

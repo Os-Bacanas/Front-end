@@ -44,7 +44,7 @@ async function deleteAll() {
     loading.value = true;
 
     try {
-        await axios.delete("/users");
+        await axios.delete("/users/deleteAll");
 
     } catch (error: unknown) {
         if (error instanceof AxiosError) {

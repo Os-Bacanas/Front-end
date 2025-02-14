@@ -1,13 +1,13 @@
 <template>
-
     <v-dialog v-model="dialog" max-width="600">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn class="text-none font-weight-regular me-auto" prepend-icon="mdi-account" text="Salvar"
-                variant="tonal" v-bind="activatorProps" color="green-darken-2" @click="clean"></v-btn>
+                variant="tonal" v-bind="activatorProps" color="green-darken-2" @click="openDialog">
+            </v-btn>
         </template>
 
-        <v-card prepend-icon="mdi-account" title="Save User">
-            <!-- Exibir mensagem de erro caso ocorra -->
+        <v-card prepend-icon="mdi-account" title="Salvar Usuário">
+
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}
             </v-alert>
@@ -41,11 +41,11 @@
                 <v-btn text="Fechar" variant="plain" @click="dialog = false"></v-btn>
 
                 <v-btn color="primary" text="Salvar" variant="tonal" @click="postLogin"
-                    :disabled="!form.nome || !form.cpf || !form.email"></v-btn>
+                    :disabled="!form.nome || !form.cpf || !form.email || loading">
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-
 </template>
 
 <script lang="ts" setup>
@@ -56,28 +56,39 @@ import axios from "../../services/api";
 import { clean, errorMessage } from '@/services/Clean';
 
 const dialog = ref(false);
-const loading = ref(false); // Variável para controlar o estado de carregamento
+const loading = ref(false);
+
+
+function openDialog() {
+    clean(form);
+    dialog.value = true;
+}
 
 
 async function postLogin() {
     errorMessage.value = "";
-    loading.value = true; // Inicia o loader
+    loading.value = true;
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao fazer ao salvar. Verifique suas credenciais.";
+        if (!valid.value) {
+            errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+            return;
+        }
 
-        const response = await axios.post("/users", {
+        await axios.post("/users", {
             nome: form.value.nome,
             email: form.value.email,
             cpf: form.value.cpf,
         });
 
+        dialog.value = false;
+        clean(form);
+
     } catch (error) {
-        // Exibe um alert de erro
-        errorMessage.value = "Erro ao fazer ao salvar. Tente novamente.";
+        console.error("Erro ao salvar:", error);
+        errorMessage.value = "Erro ao salvar. Tente novamente.";
     } finally {
         loading.value = false;
     }
 };
-
 </script>

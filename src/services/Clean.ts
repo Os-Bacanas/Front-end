@@ -1,11 +1,15 @@
+import { ref } from "vue";
+
 export const errorMessage = ref("");
 
-export function clean() {
-    errorMessage.value = '';
-    form.value.nome = ''
-    form.value.email = ''
-    form.value.cpf = ''
-}
+export function clean(form: any) {
+    if (!form || !form.value) return;
 
-import { form } from "./Campos";
-import { ref } from "vue";
+    errorMessage.value = "";
+
+    form.value = {
+        nome: '',
+        email: '',
+        cpf: ''
+    };
+}

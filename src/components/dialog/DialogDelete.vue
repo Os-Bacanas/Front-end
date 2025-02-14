@@ -1,6 +1,6 @@
 <template>
-    <v-btn class="text-none font-weight-regular" icon="mdi-delete-forever" variant="tonal"
-        color="red-darken-4" @click="isConfirmed = true, clean" :disabled="loading" size="small"></v-btn>
+    <v-btn class="text-none font-weight-regular" icon="mdi-delete-forever" variant="tonal" color="red-darken-4"
+        @click="isConfirmed = true, clean" :disabled="loading" size="small"></v-btn>
 
     <v-dialog v-model="isConfirmed" max-width="340">
         <v-card>

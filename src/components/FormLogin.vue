@@ -6,7 +6,6 @@
 
                 <div class="text-h5  text-center text-grey-darken-1">LOGIN</div>
 
-                <!-- Exibir mensagem de erro caso ocorra -->
                 <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                     {{ errorMessage }}
                 </v-alert>
@@ -42,40 +41,36 @@
 
 
 <script lang="ts" setup>
-import {required, emailIsValid} from "../services/Validacao"
-import {form, valid} from '../services/Campos'
+import { required, emailIsValid } from "../services/Validacao"
+import { form, valid } from '../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { ref, onMounted } from 'vue';
 import axios from "../services/api";
 import { useRouter } from "vue-router";
+import { jwtDecode } from "jwt-decode";
+import { getToken, type CustomJwtPayload } from '@/services/LocalStorageVerification';
 
-const errorMessage = ref(""); // Estado para mensagens de erro
+const errorMessage = ref("");
 const router = useRouter();
 
-//requisicao API ao clicar no botao ENTRAR - devemos adiconar o @click para chamar a funcao e devemos remover o to:"/" no btn (fiz essas alteraceos pq a api nao esta pronta)
 async function postLogin() {
-    errorMessage.value = ""; // Resetar mensagem de erro
+    errorMessage.value = "";
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais."; //exibe um alert, caso o email esteja na formatacao incorreta
+        if (!valid.value) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais.";
 
-        //faz a requisicao post para a api
         const response = await axios.post("/users", {
             email: form.value.email,
             password: form.value.password,
         });
 
-        // Salvar token no localStorage
         localStorage.setItem("token", response.data.token);
-
-        //redimenciona para a tela principal
         router.push("/");
+
     } catch (error) {
-        //exibe um alert de erro
         errorMessage.value = "Erro ao fazer login. Verifique suas credenciais.";
 
     } finally {
-        //time out da duracao do alert 
         setTimeout(() => {
             errorMessage.value = "";
         }, 5000);
@@ -83,14 +78,17 @@ async function postLogin() {
     }
 };
 
-// Verificar login automático ao carregar a página
 onMounted(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-        // Se o token estiver no localStorage, redireciona o usuário para o dashboard
-        router.push("/usuarios");
+    if (getToken) {
+        try {
+            const decodedToken = jwtDecode<CustomJwtPayload>(getToken);
+            if (decodedToken.name) {
+                router.push("/usuarios");
+            }
+        } catch (error) {
+            console.error("Erro ao decodificar o token:", error);
+            localStorage.removeItem("token");
+        }
     }
 });
-
 </script>

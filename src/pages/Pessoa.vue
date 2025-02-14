@@ -5,5 +5,4 @@
 
 <script lang="ts" setup>
 import TablePessoas from '@/components/TablePessoas.vue';
-
 </script>

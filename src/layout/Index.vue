@@ -7,7 +7,7 @@
 
             <template #append>
                 <v-card-text class="mr-n5 mb-n4">
-                    <v-card-subtitle>{{ nameUser() }}</v-card-subtitle>
+                    <v-card-subtitle>{{ nameUser }}</v-card-subtitle>
                 </v-card-text>
                 <v-avatar class="mr-5">
                     <v-icon icon="mdi-account-circle-outline" color="blue" size="40"></v-icon>
@@ -24,7 +24,7 @@
             </v-list>
         </v-navigation-drawer>
 
-        <v-main >
+        <v-main>
             <RouterView></RouterView>
         </v-main>
 
@@ -33,13 +33,27 @@
 
 <script setup lang="ts">
 import Sair from '@/components/Sair.vue';
-import { ref } from 'vue';
+import router from '@/router';
+import { ref, onMounted } from 'vue';
+import { getToken, type CustomJwtPayload } from '@/services/LocalStorageVerification';
+import { jwtDecode } from 'jwt-decode';
 
 const isDrawerOpen = ref(true);
+let nameUser = ""
 
-function nameUser() {
-    const name = localStorage.getItem('name');
-    return name;
-}
+onMounted(() => {
+    if (!getToken) {
+        return // router.push("/login"); caos eu nao tenha o token sou redirecionado para a tela de login
+    }
 
+    try {
+        const decodedToken = jwtDecode<CustomJwtPayload>(getToken);
+        nameUser = decodedToken.name;
+
+    } catch (error) {
+        console.error("Erro ao decodificar o token:", error);
+        localStorage.removeItem("token");
+        // router.push("/login"); caos eu nao tenha o token sou redirecionado para a tela de login
+    }
+});
 </script>

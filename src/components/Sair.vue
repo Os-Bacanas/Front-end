@@ -1,5 +1,5 @@
 <template>
-    
+
     <v-list-item title="Sair" prepend-icon="mdi-logout" @click="isConfirmed = true"></v-list-item>
 
     <v-dialog v-model="isConfirmed" max-width="340">

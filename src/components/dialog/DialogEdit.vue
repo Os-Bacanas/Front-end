@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" max-width="600">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn class="text-none font-weight-regular " icon="mdi-pencil" variant="tonal" v-bind="activatorProps"
-                color="primary" @click="clean" size="small"></v-btn>
+                color="primary" @click="resetForm" size="small"></v-btn>
         </template>
 
         <v-card prepend-icon="mdi-pencil" title="Editar Usuário">
@@ -55,29 +55,32 @@ import { clean, errorMessage } from '@/services/Clean';
 
 const dialog = ref(false);
 const loading = ref(false);
-
-// Definir props corretamente
 const props = defineProps<{
     user?: { id: number; nome: string; email: string; cpf: string };
 }>();
-
-
 const form = ref({
     nome: '',
     email: '',
     cpf: ''
 });
 
-// Atualizar o formulário quando `dialog` abrir e `props.user` estiver definido
+
 watch(dialog, (newVal) => {
     if (newVal && props.user) {
-        form.value = { ...props.user }; // Garante que estamos editando os valores corretos
+        form.value = Object.assign({}, props.user);
     }
 });
 
+function resetForm() {
+    if (props.user) {
+        form.value = Object.assign({}, props.user);
+    } else {
+        clean(form);
+    }
+}
 
 async function putEdit() {
-    if (!props.user) { return dialog.value = false; } // Evita erros caso `user` seja undefined
+    if (!props.user) { return dialog.value = false; }
 
     errorMessage.value = "";
     loading.value = true;
@@ -93,7 +96,8 @@ async function putEdit() {
 
         dialog.value = false;
 
-    } catch (error) {
+    } catch (error: any) {
+        console.error("Erro ao editar:", error.response?.data || error.message);
         errorMessage.value = "Erro ao editar. Tente novamente.";
     } finally {
         loading.value = false;

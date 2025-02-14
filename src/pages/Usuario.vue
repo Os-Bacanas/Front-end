@@ -5,6 +5,4 @@
 
 <script lang="ts" setup>
 import TableUsuarios from '../components/TableUsuarios.vue';
-
-
 </script>

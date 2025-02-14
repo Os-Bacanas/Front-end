@@ -1,8 +1,7 @@
 
 import { valid } from '../services/Campos'
 
-
- export function required(value: string) {
+export function required(value: string) {
     return value ? true : 'O campo é obrigatório';
 }
 
@@ -16,7 +15,7 @@ export function emailIsValid(value: string) {
 }
 
 export function cpfIsValid(value: string) {
-    const cleanCPF = value.replace(/\D/g, ""); // remove pontos e traços 
+    const cleanCPF = value.replace(/\D/g, "");
     if (cleanCPF.length !== 11) return 'CPF inválido';
     valid.value.cpf = true;
     return true;
@@ -27,7 +26,7 @@ export function passwordIsValid(value: string) {
     if (!/[A-Z]/.test(value)) return 'A senha deve conter pelo menos uma letra maiúscula';
     if (!/[0-9]/.test(value)) return 'A senha deve conter pelo menos um número';
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) return 'A senha deve conter pelo menos um caractere especial';
-    valid.value.password= true;
+    valid.value.password = true;
     return true;
 }
 
