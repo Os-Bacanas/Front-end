@@ -12,8 +12,8 @@
                         <tr>
                             <th class="text-left">ID</th>
                             <th class="text-left">Nomes</th>
-                            <th class="text-left">Emails</th>
-                            <th class="text-left">CPFs</th>
+                            <th class="text-left">Telefone</th>
+                            <th class="text-left">Descrição</th>
                             <th class="no-widht">Editar</th>
                             <th class="no-widht">Deletar</th>
                         </tr>
@@ -25,8 +25,8 @@
                         <tr v-for="(pessoa, index) in displayedPessoas" :key="index">
                             <td>{{ pessoa.id }}</td>
                             <td>{{ pessoa.name }}</td>
-                            <td>{{ pessoa.email }}</td>
-                            <td>{{ pessoa.cpf }}</td>
+                            <td>{{ pessoa.telefone }}</td>
+                            <td>{{ pessoa.descricao }}</td>
                             <td class="no-widht">
                                 <DialogEdit :pessoa="pessoa" />
                             </td>
@@ -52,7 +52,7 @@ import DialogEdit from './dialog/DialogEdit.vue';
 import DialogDelete from './dialog/DialogDelete.vue';
 import DialogDeleteAll from './dialog/DialogDeleteAll.vue';
 
-const pessoas = ref<UsuarioPessoa[]>([]);
+const pessoas = ref<Pessoa[]>([]);
 const displayedPessoas = computed(() => pessoas.value.slice(0, displayedCount.value));
 
  const itemsPerPage = 5; 
@@ -60,17 +60,17 @@ const displayedPessoas = computed(() => pessoas.value.slice(0, displayedCount.va
  const isLoading = ref(false);
  const sentinela = ref<HTMLElement | null>(null);
 
- interface UsuarioPessoa {
+ interface Pessoa {
     id: number;
     name: string;
-    email: string;
-    cpf: string;
+    telefone: string;
+    descricao: string;
 }
 
 async function fetchPessoas() {
     try {
         isLoading.value = true;
-        const response = await axios.get<UsuarioPessoa[]>('/people');
+        const response = await axios.get<Pessoa[]>('/people');
         pessoas.value = response.data;
     } catch (error) {
         console.log('Erro ao buscar pessoas: ', error);
