@@ -1,10 +1,10 @@
 <template>
     <h1>Usuarios</h1>
-    <Table></Table>
+    <TableUsuarios></TableUsuarios>
 </template>
 
 <script lang="ts" setup>
-import Table from '@/components/Table.vue';
+import TableUsuarios from '../components/TableUsuarios.vue';
 
 
 </script>

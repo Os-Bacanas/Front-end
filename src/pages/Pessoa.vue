@@ -1,9 +1,9 @@
 <template>
     <h1>Pessoas</h1>
-    <Table></Table>
+    <TablePessoas></TablePessoas>
 </template>
 
 <script lang="ts" setup>
-import Table from '@/components/Table.vue';
+import TablePessoas from '@/components/TablePessoas.vue';
 
 </script>

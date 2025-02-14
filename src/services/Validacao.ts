@@ -27,7 +27,7 @@ export function passwordIsValid(value: string) {
     if (!/[A-Z]/.test(value)) return 'A senha deve conter pelo menos uma letra maiúscula';
     if (!/[0-9]/.test(value)) return 'A senha deve conter pelo menos um número';
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) return 'A senha deve conter pelo menos um caractere especial';
-    valid.value.password = true;
+    valid.value.password= true;
     return true;
 }
 
