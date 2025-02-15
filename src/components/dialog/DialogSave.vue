@@ -2,7 +2,8 @@
     <v-dialog v-model="dialog" max-width="600">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn class="text-none font-weight-regular me-auto" prepend-icon="mdi-account" text="Salvar"
-                variant="tonal" v-bind="activatorProps" color="green-darken-2" @click="openDialog">
+                :variant="isDarkTheme ? 'flat' : 'tonal'" v-bind="activatorProps" color="green-darken-2"
+                @click="openDialog">
             </v-btn>
         </template>
 
@@ -49,15 +50,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { required, emailIsValid, cpfIsValid } from "../../services/Validacao";
 import { form, valid } from '../../services/Campos';
 import axios from "../../services/api";
 import { clean, errorMessage } from '@/services/Clean';
+import { useTheme } from 'vuetify';
 
 const dialog = ref(false);
 const loading = ref(false);
-
+const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.current.value.dark);
 
 function openDialog() {
     errorMessage.value = ''
