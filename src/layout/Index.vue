@@ -18,10 +18,23 @@
 
         <v-navigation-drawer v-model="isDrawerOpen">
             <v-list>
-                <v-list-item to="usuarios" title="Usuarios" prepend-icon="mdi-account"></v-list-item>
-                <v-list-item to="pessoas" title="Pessoas" prepend-icon="mdi-account-group"></v-list-item>
+                <v-list-item to="/usuarios" title="Usuários" prepend-icon="mdi-account"></v-list-item>
+                <v-list-item to="/pessoas" title="Pessoas" prepend-icon="mdi-account-group"></v-list-item>
+
+                <v-divider class="my-2"></v-divider>
+
                 <Sair></Sair>
             </v-list>
+
+            <template #append>
+                <v-divider></v-divider>
+                <div class="pa-4 d-flex justify-center">
+                    <v-btn @click="mudarTema" variant="text" size="small">
+                        <v-icon>{{ isDarkTheme ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}</v-icon>
+                        <span class="ml-2">{{ isDarkTheme ? 'Modo Escuro' : 'Modo Claro' }}</span>
+                    </v-btn>
+                </div>
+            </template>
         </v-navigation-drawer>
 
         <v-main>
@@ -37,23 +50,38 @@ import router from '@/router';
 import { ref, onMounted } from 'vue';
 import { getToken, type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
+import { useTheme } from 'vuetify';
 
 const isDrawerOpen = ref(true);
-let nameUser = ""
+const theme = useTheme();
+const isDarkTheme = ref(false);
+
+let nameUser = "";
+
+function mudarTema() {
+    isDarkTheme.value = !isDarkTheme.value;
+    theme.global.name.value = isDarkTheme.value ? 'dark' : 'light';
+    localStorage.setItem("theme", isDarkTheme.value ? "dark" : "light");
+}
 
 onMounted(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+        isDarkTheme.value = savedTheme === "dark";
+        theme.global.name.value = isDarkTheme.value ? "dark" : "light";
+    }
+
     if (!getToken) {
-        return // router.push("/login"); caos eu nao tenha o token sou redirecionado para a tela de login
+        return;// router.push('/login') // Redirecionar para login se não houver token
     }
 
     try {
         const decodedToken = jwtDecode<CustomJwtPayload>(getToken);
         nameUser = decodedToken.name;
-
     } catch (error) {
         console.error("Erro ao decodificar o token:", error);
         localStorage.removeItem("token");
-        // router.push("/login"); caos eu nao tenha o token sou redirecionado para a tela de login
+        // router.push("/login"); // Redirecionar para login em caso de erro
     }
 });
 </script>

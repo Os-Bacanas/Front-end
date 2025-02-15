@@ -2,11 +2,9 @@
     <v-container>
         <v-card class="mx-10">
             <div class="pa-4">
-
                 <v-table height="300px" fixed-header>
                     <thead>
                         <tr>
-                            <th class="text-left">ID</th>
                             <th class="text-left">Nomes</th>
                             <th class="text-left">Emails</th>
                             <th class="text-left">CPFs</th>
@@ -14,17 +12,15 @@
                     </thead>
                     <tbody>
                         <tr v-if="displayedUsuarios.length === 0">
-                            <td colspan="6" class="text-center">Nenhuma pessoa cadastrada</td>
+                            <td colspan="3" class="text-center">Nenhuma pessoa cadastrada</td>
                         </tr>
-                        <tr v-for="(usuario, index) in displayedUsuarios" :key="index">
-                            <td>{{ usuario.id }}</td>
-                            <td>{{ usuario.name }}</td>
-                            <td>{{ usuario.email }}</td>
-                            <td>{{ usuario.cpf }}</td>
-
+                        <tr v-for="usuario in displayedUsuarios" :key="usuario.cpf">
+                            <td>{{ usuario.name ?? tableMessage }}</td>
+                            <td>{{ usuario.email ?? tableMessage }}</td>
+                            <td>{{ usuario.cpf ?? tableMessage }}</td>
                         </tr>
                         <tr v-if="isLoading" ref="sentinela">
-                            <td colspan="4" class="text-center">Carregando...</td>
+                            <td colspan="3" class="text-center">Carregando...</td>
                         </tr>
                     </tbody>
                 </v-table>
@@ -34,26 +30,22 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue';
 import axios from 'axios';
 
-
+interface Usuario {
+    name?: string;
+    email?: string;
+    cpf?: string;
+}
 
 const usuarios = ref<Usuario[]>([]);
-const displayedUsuarios = computed(() => usuarios.value.slice(0, displayedCount.value));
-
-
-const itemsPerPage = 5;
+const displayedUsuarios = ref<Usuario[]>([]);
+const itemsPerPage = 0;
 const displayedCount = ref(itemsPerPage);
 const isLoading = ref(false);
 const sentinela = ref<HTMLElement | null>(null);
-
-interface Usuario {
-    id: number;
-    name: string;
-    email: string;
-    cpf: string;
-}
+const tableMessage = 'Não informado' //mensagem na tabela caso nao ha informacoes
 
 async function fetchUsuarios() {
     try {
@@ -61,7 +53,7 @@ async function fetchUsuarios() {
         const response = await axios.get<Usuario[]>('/users');
         usuarios.value = response.data;
     } catch (error) {
-        console.log('Erro ao buscar usuários: ', error);
+        console.error('Erro ao buscar usuários: ', error);
     } finally {
         isLoading.value = false;
     }
@@ -82,8 +74,13 @@ const observer = new IntersectionObserver((entries) => {
     threshold: 1.0
 });
 
-onMounted(() => {
-    fetchUsuarios();
+watchEffect(() => {
+    displayedUsuarios.value = usuarios.value.slice(0, displayedCount.value);
+});
+
+onMounted(async () => {
+    await fetchUsuarios();
+    await nextTick();
     if (sentinela.value) {
         observer.observe(sentinela.value);
     }
@@ -92,11 +89,10 @@ onMounted(() => {
 onUnmounted(() => {
     observer.disconnect();
 });
-
 </script>
 
 <style scoped>
-.no-widht {
+.no-width {
     width: 0px !important;
 }
 </style>

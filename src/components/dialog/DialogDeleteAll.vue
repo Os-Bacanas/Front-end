@@ -1,11 +1,12 @@
 <template>
-    <v-btn class="text-none font-weight-regular" prepend-icon="mdi-close" text="Deletar Todos" variant="tonal"
-        color="red-darken-4" @click="isConfirmed = true, clean" :disabled="loading"></v-btn>
+    <v-btn class="text-none font-weight-regular" prepend-icon="mdi-close" text="Deletar Todos"
+        :variant="isDarkTheme ? 'flat' : 'tonal'" color="red-darken-4" @click="openDialog" :disabled="loading">
+    </v-btn>
 
     <v-dialog v-model="isConfirmed" max-width="340">
         <v-card>
             <v-card-title class="text-h5">
-                Deseja deletar todos?
+                Deseja Deletar Todos?
                 <v-card-subtitle>Não será possível recuperar os dados</v-card-subtitle>
             </v-card-title>
 
@@ -18,19 +19,27 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="green" @click="confirmAction" :disabled="loading">Sim</v-btn>
-                <v-btn color="red" @click="isConfirmed = false" :disabled="loading">Não</v-btn>
+                <v-btn color="red" @click="isConfirmed = false" :disabled="loading" variant="flat">Não</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import axios, { AxiosError } from 'axios';
-import { clean, errorMessage } from '@/services/Clean';
+import { errorMessage } from '@/services/Clean';
+import { useTheme } from 'vuetify';
 
 const isConfirmed = ref(false);
 const loading = ref(false);
+const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.current.value.dark);
+
+function openDialog() {
+    errorMessage.value = "";
+    isConfirmed.value = true;
+}
 
 async function confirmAction() {
     await deleteAll();
@@ -40,9 +49,7 @@ async function confirmAction() {
 }
 
 async function deleteAll() {
-    errorMessage.value = "";
     loading.value = true;
-
     try {
         await axios.delete("/users/deleteAll");
 

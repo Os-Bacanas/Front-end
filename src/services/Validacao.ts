@@ -35,3 +35,10 @@ export function confirmPasswordIsValid(value: string, password: string) {
     valid.value.confirmPassword = true;
     return true;
 }
+
+export function telefoneIsValid(value: string) {
+    const cleanPhone = value.replace(/\D/g, "");
+    if (cleanPhone.length !== 11) return 'Telefone inválido'
+    valid.value.telefone = true;
+    return true;
+}

@@ -5,7 +5,8 @@ export const form = ref({
     cpf: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    telefone: "",
 });
 
 export const valid = ref({
@@ -13,4 +14,5 @@ export const valid = ref({
     email: false,
     password: false,
     confirmPassword: false,
+    telefone: false,
 });

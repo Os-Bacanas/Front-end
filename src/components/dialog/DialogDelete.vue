@@ -1,14 +1,14 @@
 <template>
-    <v-btn class="text-none font-weight-regular" icon="mdi-delete-forever" variant="tonal" color="red-darken-4"
-        @click="isConfirmed = true, clean" :disabled="loading" size="small"></v-btn>
+    <v-btn icon color="red-darken-4" variant="text" size="small" :disabled="loading" @click="openDialog">
+        <v-icon>mdi-delete-forever</v-icon>
+    </v-btn>
 
     <v-dialog v-model="isConfirmed" max-width="340">
         <v-card>
             <v-card-title class="text-h5">
-                Deseja deletar todos?
+                Deseja deletar?
                 <v-card-subtitle>Não será possível recuperar os dados</v-card-subtitle>
             </v-card-title>
-
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}
@@ -28,10 +28,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import axios, { AxiosError } from 'axios';
-import { clean, errorMessage } from '@/services/Clean';
+import { errorMessage } from '@/services/Clean';
 
 const isConfirmed = ref(false);
 const loading = ref(false);
+
+function openDialog() {
+    errorMessage.value = "";
+    isConfirmed.value = true;
+}
 
 async function confirmAction() {
     await deleteAll();
@@ -41,12 +46,10 @@ async function confirmAction() {
 }
 
 async function deleteAll() {
-    errorMessage.value = "";
     loading.value = true;
 
     try {
         await axios.delete("/users");
-
     } catch (error: unknown) {
         if (error instanceof AxiosError) {
             errorMessage.value = error.response?.data?.message || "Erro ao deletar. Tente novamente.";

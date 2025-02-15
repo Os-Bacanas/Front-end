@@ -1,8 +1,9 @@
 <template>
     <v-dialog v-model="dialog" max-width="600">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn class="text-none font-weight-regular " icon="mdi-pencil" variant="tonal" v-bind="activatorProps"
-                color="primary" @click="resetForm" size="small"></v-btn>
+            <v-btn icon color="primary" variant="text" size="small" v-bind="activatorProps" @click="resetForm">
+                <v-icon>mdi-pencil</v-icon>
+            </v-btn>
         </template>
 
         <v-card prepend-icon="mdi-pencil" title="Editar Usuário">
@@ -25,6 +26,12 @@
                     <v-col cols="12" md="4" sm="6">
                         <v-text-field label="CPF*" v-model="form.cpf" :rules="[required, cpfIsValid]"></v-text-field>
                     </v-col>
+
+                    <v-col cols="12" md="4" sm="6">
+                        <v-text-field label="Telefone*" v-model="form.telefone"
+                            :rules="[required, telefoneIsValid]"></v-text-field>
+                    </v-col>
+
                 </v-row>
 
                 <small class="text-caption text-medium-emphasis">*Preencha os dados corretamente</small>
@@ -33,14 +40,13 @@
             <v-divider></v-divider>
             <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
-
             <v-card-actions>
                 <v-spacer></v-spacer>
 
                 <v-btn text="Fechar" variant="plain" @click="dialog = false"></v-btn>
 
                 <v-btn color="primary" text="Editar" variant="tonal" @click="putEdit"
-                    :disabled="!form.nome || !form.cpf || !form.email || loading"></v-btn>
+                    :disabled="!form.nome || !form.cpf || !form.email || !form.telefone || loading"></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -48,7 +54,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { required, emailIsValid, cpfIsValid } from "../../services/Validacao";
+import { required, emailIsValid, cpfIsValid, telefoneIsValid } from "../../services/Validacao";
 import axios from "../../services/api";
 import { valid } from '@/services/Campos';
 import { clean, errorMessage } from '@/services/Clean';
@@ -56,14 +62,20 @@ import { clean, errorMessage } from '@/services/Clean';
 const dialog = ref(false);
 const loading = ref(false);
 const props = defineProps<{
-    user?: { id: number; nome: string; email: string; cpf: string };
+    user?: {
+        nome: string;
+        email: string;
+        cpf: string;
+        telefone: string;
+        descricao: string;
+    };
 }>();
 const form = ref({
     nome: '',
     email: '',
-    cpf: ''
+    cpf: '',
+    telefone: '',
 });
-
 
 watch(dialog, (newVal) => {
     if (newVal && props.user) {
@@ -80,18 +92,20 @@ function resetForm() {
 }
 
 async function putEdit() {
-    if (!props.user) { return dialog.value = false; }
+    if (!props.user) {
+        return dialog.value = false;
+    }
 
-    errorMessage.value = "";
     loading.value = true;
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao fazer ao salvar. Verifique suas credenciais.";
+        if (!valid.value) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
-        const response = await axios.put(`/users/${props.user.id}`, {
+        await axios.put(`/users/${props.user.email}`, {
             nome: form.value.nome,
             email: form.value.email,
             cpf: form.value.cpf,
+            telefone: form.value.telefone,
         });
 
         dialog.value = false;
