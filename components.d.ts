@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BaseTable: typeof import('./src/components/BaseTable.vue')['default']
     Cadastro: typeof import('./src/components/cadastro.vue')['default']
     DialogDelete: typeof import('./src/components/dialog/DialogDelete.vue')['default']
     DialogDeleteAll: typeof import('./src/components/dialog/DialogDeleteAll.vue')['default']

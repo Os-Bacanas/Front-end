@@ -40,7 +40,6 @@
             <v-divider></v-divider>
             <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
-
             <v-card-actions>
                 <v-spacer></v-spacer>
 
@@ -66,8 +65,9 @@ const props = defineProps<{
     user?: {
         nome: string;
         email: string;
-        cpf: string,
-        telefone: string
+        cpf: string;
+        telefone: string;
+        descricao: string;
     };
 }>();
 const form = ref({
@@ -76,7 +76,6 @@ const form = ref({
     cpf: '',
     telefone: '',
 });
-
 
 watch(dialog, (newVal) => {
     if (newVal && props.user) {
@@ -93,11 +92,14 @@ function resetForm() {
 }
 
 async function putEdit() {
-    if (!props.user) { return dialog.value = false; }
+    if (!props.user) {
+        return dialog.value = false;
+    }
+
     loading.value = true;
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao fazer ao salvar. Verifique suas credenciais.";
+        if (!valid.value) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
         await axios.put(`/users/${props.user.email}`, {
             nome: form.value.nome,
