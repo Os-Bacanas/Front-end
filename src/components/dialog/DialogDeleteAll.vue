@@ -1,6 +1,7 @@
 <template>
     <v-btn class="text-none font-weight-regular" prepend-icon="mdi-close" text="Deletar Todos" variant="tonal"
-        color="red-darken-4" @click="isConfirmed = true, clean" :disabled="loading"></v-btn>
+        color="red-darken-4" @click="openDialog" :disabled="loading">
+    </v-btn>
 
     <v-dialog v-model="isConfirmed" max-width="340">
         <v-card>
@@ -27,10 +28,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import axios, { AxiosError } from 'axios';
-import { clean, errorMessage } from '@/services/Clean';
+import { errorMessage } from '@/services/Clean';
 
 const isConfirmed = ref(false);
 const loading = ref(false);
+
+function openDialog() {
+    errorMessage.value = "";
+    isConfirmed.value = true;
+}
 
 async function confirmAction() {
     await deleteAll();
@@ -40,9 +46,7 @@ async function confirmAction() {
 }
 
 async function deleteAll() {
-    errorMessage.value = "";
     loading.value = true;
-
     try {
         await axios.delete("/users/deleteAll");
 
