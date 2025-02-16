@@ -7,26 +7,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    BaseTable: typeof import('./src/components/BaseTable.vue')['default']
-    Cadastro: typeof import('./src/components/cadastro.vue')['default']
     DialogDelete: typeof import('./src/components/dialog/DialogDelete.vue')['default']
     DialogDeleteAll: typeof import('./src/components/dialog/DialogDeleteAll.vue')['default']
     DialogEdit: typeof import('./src/components/dialog/DialogEdit.vue')['default']
     DialogSave: typeof import('./src/components/dialog/DialogSave.vue')['default']
-    Error: typeof import('./src/components/Error.vue')['default']
-    ErrorMensage: typeof import('./src/components/ErrorMensage.vue')['default']
     FormCadastro: typeof import('./src/components/FormCadastro.vue')['default']
     FormLogin: typeof import('./src/components/FormLogin.vue')['default']
-    LoaderLinear: typeof import('./src/components/LoaderLinear.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sair: typeof import('./src/components/Sair.vue')['default']
-    Salvar: typeof import('./src/components/Salvar.vue')['default']
-    Save: typeof import('./src/components/Save.vue')['default']
-    Seila: typeof import('./src/components/Seila.vue')['default']
-    Table: typeof import('./src/components/Table.vue')['default']
     TablePessoas: typeof import('./src/components/TablePessoas.vue')['default']
     TableUsuarios: typeof import('./src/components/TableUsuarios.vue')['default']
-    TemplateError: typeof import('./src/components/TemplateError.vue')['default']
   }
 }

@@ -11,38 +11,38 @@
                 </v-alert>
 
                 <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
-                <v-text-field v-model="form.nome" density="compact" placeholder="Nome do usuário" variant="outlined"
+                <v-text-field v-model="formComSenha.nome" density="compact" placeholder="Nome do usuário" variant="outlined"
                     :rules="[required]" prepend-inner-icon="mdi-account-outline"></v-text-field>
 
 
                 <div class="text-subtitle-1 text-medium-emphasis">CPF</div>
-                <v-text-field v-model="form.cpf" density="compact" placeholder="CPF" variant="outlined"
+                <v-text-field v-model="formComSenha.cpf" density="compact" placeholder="CPF" variant="outlined"
                     :rules="[required, cpfIsValid]"
                     prepend-inner-icon="mdi-card-account-details-outline"></v-text-field>
 
 
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-                <v-text-field v-model="form.email" density="compact" placeholder="Email address"
+                <v-text-field v-model="formComSenha.email" density="compact" placeholder="Email address"
                     prepend-inner-icon="mdi-email-outline" variant="outlined"
                     :rules="[required, emailIsValid]"></v-text-field>
 
 
                 <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">Senha</div>
-                <v-text-field v-model="form.password" @click:append-inner="toggleVisibility"
+                <v-text-field v-model="formComSenha.password" @click:append-inner="toggleVisibility"
                     :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
                     density="compact" placeholder="Digite uma senha" prepend-inner-icon="mdi-lock-outline"
                     variant="outlined" :rules="[required, passwordIsValid]"></v-text-field>
 
 
                 <div class="text-subtitle-1 text-medium-emphasis">Confirmar senha</div>
-                <v-text-field v-model="form.confirmPassword" @click:append-inner="toggleVisibility"
+                <v-text-field v-model="formComSenha.confirmPassword" @click:append-inner="toggleVisibility"
                     :type="visible ? 'text' : 'password'" density="compact" placeholder="Confirme sua senha"
                     prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                    :rules="[required, value => confirmPasswordIsValid(value, form.password)]"></v-text-field>
+                    :rules="[required, value => confirmPasswordIsValid(value, formComSenha.password)]"></v-text-field>
 
 
                 <v-btn class="mt-3" color="blue" size="large" variant="tonal" block @click="postCadastro"
-                    :disabled="!form.nome || !form.cpf || !form.email || !form.password || !form.confirmPassword">Cadastra-se</v-btn>
+                    :disabled="!formComSenha.nome || !formComSenha.cpf || !formComSenha.email || !formComSenha.password || !formComSenha.confirmPassword">Cadastra-se</v-btn>
 
 
                 <v-card-text class="text-end pt-10 mb-n5">
@@ -58,11 +58,11 @@
 
 <script lang="ts" setup>
 import { required, emailIsValid, cpfIsValid, passwordIsValid, confirmPasswordIsValid } from "../services/Validacao"
-import { form, valid } from '../services/Campos'
+import { formComSenha, valid } from '../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import axios from "../services/api";
 import { useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
+import {  onMounted } from "vue";
 import { clean, errorMessage } from "@/services/Clean";
 
 const router = useRouter();
@@ -74,10 +74,10 @@ async function postCadastro() {
         if (!valid.value) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais.";
 
         await axios.post("/cadastro", {
-            nome: form.value.nome,
-            cpf: form.value.cpf,
-            email: form.value.email,
-            password: form.value.password,
+            nome: formComSenha.value.nome,
+            cpf: formComSenha.value.cpf,
+            email: formComSenha.value.email,
+            password: formComSenha.value.password,
         });
 
         router.push("/login");
@@ -93,6 +93,6 @@ async function postCadastro() {
 };
 
 onMounted(() => {
-    clean(form);
+    clean(formComSenha);
 });
 </script>

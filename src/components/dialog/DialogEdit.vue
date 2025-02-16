@@ -6,7 +6,7 @@
             </v-btn>
         </template>
 
-        <v-card prepend-icon="mdi-pencil" title="Editar Usuário">
+        <v-card prepend-icon="mdi-pencil" title="Editar Contato">
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}
@@ -15,20 +15,21 @@
             <v-card-text>
                 <v-row dense>
                     <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="Nome*" v-model="form.nome" :rules="[required]"></v-text-field>
+                        <v-text-field label="Nome*" v-model="formBase.nome" :rules="[required]"></v-text-field>
                     </v-col>
 
                     <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="Email*" v-model="form.email"
+                        <v-text-field label="Email*" v-model="formBase.email"
                             :rules="[required, emailIsValid]"></v-text-field>
                     </v-col>
 
                     <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="CPF*" v-model="form.cpf" :rules="[required, cpfIsValid]"></v-text-field>
+                        <v-text-field label="CPF*" v-model="formBase.cpf"
+                            :rules="[required, cpfIsValid]"></v-text-field>
                     </v-col>
 
                     <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="Telefone*" v-model="form.telefone"
+                        <v-text-field label="Telefone*" v-model="formBase.telefone"
                             :rules="[required, telefoneIsValid]"></v-text-field>
                     </v-col>
 
@@ -46,7 +47,7 @@
                 <v-btn text="Fechar" variant="plain" @click="dialog = false"></v-btn>
 
                 <v-btn color="primary" text="Editar" variant="tonal" @click="putEdit"
-                    :disabled="!form.nome || !form.cpf || !form.email || !form.telefone || loading"></v-btn>
+                    :disabled="!formBase.nome || !formBase.cpf || !formBase.email || !formBase.telefone || loading"></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -56,7 +57,7 @@
 import { ref, watch } from 'vue';
 import { required, emailIsValid, cpfIsValid, telefoneIsValid } from "../../services/Validacao";
 import axios from "../../services/api";
-import { valid } from '@/services/Campos';
+import { valid, formBase } from '@/services/Campos';
 import { clean, errorMessage } from '@/services/Clean';
 
 const dialog = ref(false);
@@ -70,24 +71,19 @@ const props = defineProps<{
         descricao: string;
     };
 }>();
-const form = ref({
-    nome: '',
-    email: '',
-    cpf: '',
-    telefone: '',
-});
 
 watch(dialog, (newVal) => {
     if (newVal && props.user) {
-        form.value = Object.assign({}, props.user);
+        formBase.value = Object.assign({}, props.user);
     }
 });
 
 function resetForm() {
+    errorMessage.value = ''
     if (props.user) {
-        form.value = Object.assign({}, props.user);
+        formBase.value = Object.assign({}, props.user);
     } else {
-        clean(form);
+        clean(formBase);
     }
 }
 
@@ -102,10 +98,10 @@ async function putEdit() {
         if (!valid.value) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
         await axios.put(`/users/${props.user.email}`, {
-            nome: form.value.nome,
-            email: form.value.email,
-            cpf: form.value.cpf,
-            telefone: form.value.telefone,
+            nome: formBase.value.nome,
+            email: formBase.value.email,
+            cpf: formBase.value.cpf,
+            telefone: formBase.value.telefone,
         });
 
         dialog.value = false;
@@ -115,9 +111,6 @@ async function putEdit() {
         errorMessage.value = "Erro ao editar. Tente novamente.";
     } finally {
         loading.value = false;
-        setTimeout(() => {
-            errorMessage.value = "";
-        }, 5000);
     }
 };
 </script>
