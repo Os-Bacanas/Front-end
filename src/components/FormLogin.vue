@@ -12,20 +12,20 @@
 
 
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-                <v-text-field v-model="form.email" density="compact" placeholder="Digite seu email"
+                <v-text-field v-model="formComSenha.email" density="compact" placeholder="Digite seu email"
                     prepend-inner-icon="mdi-email-outline" variant="outlined"
                     :rules="[required, emailIsValid]"></v-text-field>
 
 
                 <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">Senha</div>
-                <v-text-field v-model="form.password" @click:append-inner="toggleVisibility"
+                <v-text-field v-model="formComSenha.password" @click:append-inner="toggleVisibility"
                     :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
                     density="compact" placeholder="Digite sua senha" prepend-inner-icon="mdi-lock-outline"
                     variant="outlined" :rules="[required]"></v-text-field>
 
 
                 <v-btn class="mt-3" color="blue" size="large" variant="tonal" block
-                    :disabled="!form.email || !form.password" @click="postLogin">Entrar</v-btn>
+                    :disabled="!formComSenha.email || !formComSenha.password" @click="postLogin">Entrar</v-btn>
 
 
                 <v-card-text class="text-end pt-10 mb-n5">
@@ -42,9 +42,9 @@
 
 <script lang="ts" setup>
 import { required, emailIsValid } from "../services/Validacao"
-import { form, valid } from '../services/Campos'
+import { formComSenha, valid } from '../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import axios from "../services/api";
 import { useRouter } from "vue-router";
 import { jwtDecode } from "jwt-decode";
@@ -60,8 +60,8 @@ async function postLogin() {
         if (!valid.value) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais.";
 
         const response = await axios.post("/users", {
-            email: form.value.email,
-            password: form.value.password,
+            email: formComSenha.value.email,
+            password: formComSenha.value.password,
         });
 
         localStorage.setItem("token", response.data.token);
@@ -79,7 +79,7 @@ async function postLogin() {
 };
 
 onMounted(() => {
-    clean(form);
+    clean(formComSenha);
     if (getToken) {
         try {
             const decodedToken = jwtDecode<CustomJwtPayload>(getToken);
