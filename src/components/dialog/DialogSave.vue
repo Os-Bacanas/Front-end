@@ -25,7 +25,16 @@
                     </v-col>
 
                     <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="CPF*" v-model="formBase.cpf" :rules="[required, cpfIsValid]"></v-text-field>
+                        <v-text-field label="CPF*" v-model="formBase.cpf"
+                            :rules="[required, cpfIsValid]"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4" sm="6">
+                        <v-text-field label="Telefone*" v-model="formBase.telefone"
+                            :rules="[required, telefoneIsValid]"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4" sm="6">
+                        <v-text-field label="Descrição*" v-model="formBase.descricao"
+                            :rules="[required]"></v-text-field>
                     </v-col>
                 </v-row>
 
@@ -51,9 +60,9 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import { required, emailIsValid, cpfIsValid } from "../../services/Validacao";
+import { required, emailIsValid, cpfIsValid, telefoneIsValid } from "../../services/Validacao";
 import { formBase, valid } from '../../services/Campos';
-import axios from "../../services/api";
+import api from "../../services/api";
 import { clean, errorMessage } from '@/services/Clean';
 import { useTheme } from 'vuetify';
 
@@ -73,15 +82,14 @@ async function postLogin() {
     loading.value = true;
 
     try {
-        if (!valid.value) {
-            errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
-            return;
-        }
+        if (!valid.value) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
-        await axios.post("/users", {
+        await api.post("/people", {
             nome: formBase.value.nome,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
+            phone: formBase.value.telefone,
+            description: formBase.value.descricao,
         });
 
         dialog.value = false;

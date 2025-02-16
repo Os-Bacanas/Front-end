@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { required, emailIsValid, cpfIsValid, telefoneIsValid } from "../../services/Validacao";
-import axios from "../../services/api";
+import api from "../../services/api";
 import { valid, formBase } from '@/services/Campos';
 import { clean, errorMessage } from '@/services/Clean';
 
@@ -97,7 +97,7 @@ async function putEdit() {
     try {
         if (!valid.value) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
-        await axios.put(`/users/${props.user.email}`, {
+        await api.put(`/people/${props.user.email}`, {
             nome: formBase.value.nome,
             email: formBase.value.email,
             cpf: formBase.value.cpf,

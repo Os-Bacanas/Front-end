@@ -45,11 +45,11 @@ import { required, emailIsValid } from "../services/Validacao"
 import { formComSenha, valid } from '../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { onMounted } from 'vue';
-import axios from "../services/api";
 import { useRouter } from "vue-router";
 import { jwtDecode } from "jwt-decode";
 import { getToken, type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { clean, errorMessage } from "@/services/Clean";
+import api from "@/services/api";
 
 const router = useRouter();
 
@@ -59,7 +59,7 @@ async function postLogin() {
     try {
         if (!valid.value) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais.";
 
-        const response = await axios.post("/users", {
+        const response = await api.post("/users/login", {
             email: formComSenha.value.email,
             password: formComSenha.value.password,
         });
@@ -79,6 +79,7 @@ async function postLogin() {
 };
 
 onMounted(() => {
+    errorMessage.value = '';
     clean(formComSenha);
     if (getToken) {
         try {

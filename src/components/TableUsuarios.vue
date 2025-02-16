@@ -11,10 +11,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="displayedUsuarios.length === 0">
+                        <tr v-if="displayedUsuarios.length === 0 && !isLoading">
                             <td colspan="3" class="text-center">Nenhuma pessoa cadastrada</td>
                         </tr>
-                        <tr v-for="usuario in displayedUsuarios" :key="usuario.cpf">
+                        <tr v-for="usuario in displayedUsuarios" :key="usuario.email">
                             <td>{{ usuario.name ?? tableMessage }}</td>
                             <td>{{ usuario.email ?? tableMessage }}</td>
                             <td>{{ usuario.cpf ?? tableMessage }}</td>
@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue';
-import axios from 'axios';
+import api from '@/services/api';
 
 interface Usuario {
     name?: string;
@@ -41,36 +41,41 @@ interface Usuario {
 
 const usuarios = ref<Usuario[]>([]);
 const displayedUsuarios = ref<Usuario[]>([]);
-const itemsPerPage = 0;
+const itemsPerPage = 5;
 const displayedCount = ref(itemsPerPage);
 const isLoading = ref(false);
 const sentinela = ref<HTMLElement | null>(null);
-const tableMessage = 'Não informado' //mensagem na tabela caso nao ha informacoes
+const tableMessage = 'Não informado';
 
 async function fetchUsuarios() {
     try {
         isLoading.value = true;
-        const response = await axios.get<Usuario[]>('/users');
-        usuarios.value = response.data;
+        const response = await api.get('/users');
+
+        usuarios.value = response.data.map((user: any) => ({
+            name: user.name,
+            email: user.email,
+            cpf: user.cpf,
+        }));
     } catch (error) {
         console.error('Erro ao buscar usuários: ', error);
     } finally {
         isLoading.value = false;
     }
-};
+}
 
 function loadMoreUsuarios() {
     if (displayedCount.value < usuarios.value.length) {
-        displayedCount.value += itemsPerPage;
+        displayedCount.value = Math.min(displayedCount.value + itemsPerPage, usuarios.value.length);
     }
-};
+}
 
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !isLoading.value) {
         loadMoreUsuarios();
     }
 }, {
-    rootMargin: '0px',
+    rootMargin: '50px',
     threshold: 1.0
 });
 
@@ -92,7 +97,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.no-width {
-    width: 0px !important;
+.sentinela {
+    height: 1px;
 }
 </style>

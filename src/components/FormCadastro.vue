@@ -11,8 +11,8 @@
                 </v-alert>
 
                 <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
-                <v-text-field v-model="formComSenha.nome" density="compact" placeholder="Nome do usuário" variant="outlined"
-                    :rules="[required]" prepend-inner-icon="mdi-account-outline"></v-text-field>
+                <v-text-field v-model="formComSenha.nome" density="compact" placeholder="Nome do usuário"
+                    variant="outlined" :rules="[required]" prepend-inner-icon="mdi-account-outline"></v-text-field>
 
 
                 <div class="text-subtitle-1 text-medium-emphasis">CPF</div>
@@ -60,10 +60,10 @@
 import { required, emailIsValid, cpfIsValid, passwordIsValid, confirmPasswordIsValid } from "../services/Validacao"
 import { formComSenha, valid } from '../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
-import axios from "../services/api";
 import { useRouter } from "vue-router";
-import {  onMounted } from "vue";
+import { onMounted } from "vue";
 import { clean, errorMessage } from "@/services/Clean";
+import api from "../services/api";
 
 const router = useRouter();
 
@@ -73,7 +73,7 @@ async function postCadastro() {
     try {
         if (!valid.value) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais.";
 
-        await axios.post("/cadastro", {
+        await api.post("/users/cadastro", {
             nome: formComSenha.value.nome,
             cpf: formComSenha.value.cpf,
             email: formComSenha.value.email,
@@ -93,6 +93,7 @@ async function postCadastro() {
 };
 
 onMounted(() => {
+    errorMessage.value = '';
     clean(formComSenha);
 });
 </script>

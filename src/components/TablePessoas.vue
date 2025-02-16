@@ -22,21 +22,21 @@
                             <td colspan="6" class="text-center">Nenhuma pessoa cadastrada</td>
                         </tr>
                         <tr v-for="pessoa in displayedPessoas" :key="pessoa.email">
-                            <td>{{ pessoa.nome ?? tableMessage }}</td>
+                            <td>{{ pessoa.name ?? tableMessage }}</td>
                             <td>{{ pessoa.email ?? tableMessage }}</td>
                             <td>{{ pessoa.cpf ?? tableMessage }}</td>
-                            <td>{{ pessoa.telefone ?? tableMessage }}</td>
-                            <td>{{ pessoa.descricao ?? tableMessage }}</td>
+                            <td>{{ pessoa.phone ?? tableMessage }}</td>
+                            <td>{{ pessoa.description ?? tableMessage }}</td>
                             <td class="no-width">
                                 <v-btn-group>
                                     <DialogEdit :user="{
-                                        nome: pessoa.nome || '',
+                                        nome: pessoa.name || '',
                                         email: pessoa.email || '',
                                         cpf: pessoa.cpf || '',
-                                        telefone: pessoa.telefone || '',
-                                        descricao: pessoa.descricao || ''
+                                        telefone: pessoa.phone || '',
+                                        descricao: pessoa.description || ''
                                     }" />
-                                    <DialogDelete :pessoaId="pessoa.email" @deleted="handleDelete" />
+                                    <DialogDelete :user="{ email: formBase.email }" @deleted="handleDelete" />
                                 </v-btn-group>
                             </td>
                         </tr>
@@ -52,23 +52,24 @@
 
 <script lang="ts" setup>
 import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue';
-import axios from 'axios';
 import DialogSave from './dialog/DialogSave.vue';
 import DialogEdit from './dialog/DialogEdit.vue';
 import DialogDelete from './dialog/DialogDelete.vue';
 import DialogDeleteAll from './dialog/DialogDeleteAll.vue';
+import api from '@/services/api';
+import { formBase } from '@/services/Campos';
 
 interface Pessoa {
-    nome?: string;
+    name?: string;
     email?: string;
     cpf?: string;
-    telefone?: string;
-    descricao?: string;
+    phone?: string;
+    description?: string;
 }
 
 const pessoas = ref<Pessoa[]>([]);
 const displayedPessoas = ref<Pessoa[]>([]);
-const itemsPerPage = 2;
+const itemsPerPage = 5;
 const displayedCount = ref(itemsPerPage);
 const isLoading = ref(false);
 const sentinela = ref<HTMLElement | null>(null);
@@ -77,8 +78,13 @@ const tableMessage = 'Não informado'
 async function fetchPessoas() {
     try {
         isLoading.value = true;
-        const response = await axios.get<Pessoa[]>('/people');
-        pessoas.value = response.data;
+        const response = await api.get<Pessoa[]>('/users');
+        pessoas.value = response.data.map((person: any) => ({
+            name: person.name,
+            email: person.email,
+            cpf: person.cpf,
+            phone: person.phone,
+        }))
     } catch (error) {
         console.error('Erro ao buscar pessoas: ', error);
     } finally {
@@ -88,7 +94,7 @@ async function fetchPessoas() {
 
 function loadMorePessoas() {
     if (displayedCount.value < pessoas.value.length) {
-        displayedCount.value += itemsPerPage;
+        displayedCount.value = Math.min(displayedCount.value + itemsPerPage, pessoas.value.length)
     }
 };
 
@@ -101,7 +107,7 @@ const observer = new IntersectionObserver((entries) => {
         loadMorePessoas();
     }
 }, {
-    rootMargin: '0px',
+    rootMargin: '50px',
     threshold: 1.0
 });
 
