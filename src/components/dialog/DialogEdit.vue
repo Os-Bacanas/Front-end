@@ -47,7 +47,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <v-btn text="Fechar" variant="plain" @click="dialog = false"></v-btn>
+                <v-btn text="Cancelar" variant="plain" @click="dialog = false"></v-btn>
 
                 <v-btn color="primary" text="Editar" variant="tonal" @click="putEdit"
                     :disabled="!formBase.nome || !formBase.email || !formBase.telefone || loading"></v-btn>
@@ -66,7 +66,7 @@ import { clean, errorMessage } from '@/services/Clean';
 const dialog = ref(false);
 const loading = ref(false);
 const props = defineProps<{
-    user?: {
+    pessoa?: {
         nome: string;
         email: string;
         cpf: string;
@@ -76,15 +76,15 @@ const props = defineProps<{
 }>();
 
 watch(dialog, (newVal) => {
-    if (newVal && props.user) {
-        formBase.value = Object.assign({}, props.user);
+    if (newVal && props.pessoa) {
+        formBase.value = Object.assign({}, props.pessoa);
     }
 });
 
 function resetForm() {
     errorMessage.value = ''
-    if (props.user) {
-        formBase.value = Object.assign({}, props.user);
+    if (props.pessoa) {
+        formBase.value = Object.assign({}, props.pessoa);
     } else {
         clean(formBase);
     }
@@ -92,7 +92,7 @@ function resetForm() {
 
 async function putEdit() {
     errorMessage.value = ''
-    if (!props.user) {
+    if (!props.pessoa) {
         return dialog.value = false;
     }
 
@@ -101,7 +101,7 @@ async function putEdit() {
     try {
         if (!valid.value.email || !valid.value.telefone || !valid.value.cpf) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
-        await api.put(`/people/${props.user.email}`, {
+        await api.put(`/people/${props.pessoa.email}`, {
             nome: formBase.value.nome,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
