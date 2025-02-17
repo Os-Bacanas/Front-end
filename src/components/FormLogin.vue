@@ -57,7 +57,7 @@ async function postLogin() {
     errorMessage.value = "";
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais.";
+        if (!valid.value.email) return errorMessage.value = "Erro ao fazer login. Verifique suas credenciais.";
 
         const response = await api.post("/users/login", {
             email: formComSenha.value.email,
@@ -68,8 +68,8 @@ async function postLogin() {
         router.push("/");
 
     } catch (error) {
-        errorMessage.value = "Erro ao fazer login. Verifique suas credenciais.";
-
+        console.error("Erro ao fazer o login:", error);
+        errorMessage.value = "Erro ao fazer o login. Tente novamente.";
     } finally {
         setTimeout(() => {
             errorMessage.value = "";

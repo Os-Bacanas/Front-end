@@ -25,8 +25,7 @@
                     </v-col>
 
                     <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="CPF*" v-model="formBase.cpf"
-                            :rules="[required, cpfIsValid]"></v-text-field>
+                        <v-text-field label="CPF" v-model="formBase.cpf" :rules="[cpfIsValid]"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="4" sm="6">
                         <v-text-field label="Telefone*" v-model="formBase.telefone"
@@ -34,7 +33,8 @@
                     </v-col>
                     <v-col>
                         <v-combobox label="Descrição do Telefone*"
-                            :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']" v-model="formBase.descricao"></v-combobox>
+                            :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
+                            v-model="formBase.descricao"></v-combobox>
                     </v-col>
                 </v-row>
 
@@ -51,7 +51,7 @@
                 <v-btn text="Fechar" variant="plain" @click="dialog = false"></v-btn>
 
                 <v-btn color="primary" text="Salvar" variant="tonal" @click="postLogin"
-                    :disabled="!formBase.nome || !formBase.cpf || !formBase.email || loading">
+                    :disabled="!formBase.nome || !formBase.email || loading">
                 </v-btn>
             </v-card-actions>
         </v-card>
@@ -82,7 +82,7 @@ async function postLogin() {
     loading.value = true;
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+        if (!valid.value.email || !valid.value.cpf || !valid.value.telefone) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
         await api.post("/people", {
             nome: formBase.value.nome,

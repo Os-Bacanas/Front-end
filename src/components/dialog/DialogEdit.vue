@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" max-width="600">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon color="primary" variant="text" size="small" v-bind="activatorProps" @click="resetForm">
+            <v-btn icon color="primary" variant="text" v-bind="activatorProps" @click="resetForm">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn>
         </template>
@@ -24,8 +24,7 @@
                     </v-col>
 
                     <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="CPF*" v-model="formBase.cpf"
-                            :rules="[required, cpfIsValid]"></v-text-field>
+                        <v-text-field label="CPF" v-model="formBase.cpf" :rules="[cpfIsValid]"></v-text-field>
                     </v-col>
 
                     <v-col cols="12" md="4" sm="6">
@@ -51,7 +50,7 @@
                 <v-btn text="Fechar" variant="plain" @click="dialog = false"></v-btn>
 
                 <v-btn color="primary" text="Editar" variant="tonal" @click="putEdit"
-                    :disabled="!formBase.nome || !formBase.cpf || !formBase.email || !formBase.telefone || loading"></v-btn>
+                    :disabled="!formBase.nome || !formBase.email || !formBase.telefone || loading"></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -92,6 +91,7 @@ function resetForm() {
 }
 
 async function putEdit() {
+    errorMessage.value = ''
     if (!props.user) {
         return dialog.value = false;
     }
@@ -99,7 +99,7 @@ async function putEdit() {
     loading.value = true;
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+        if (!valid.value.email || !valid.value.telefone || !valid.value.cpf) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
         await api.put(`/people/${props.user.email}`, {
             nome: formBase.value.nome,
@@ -110,8 +110,8 @@ async function putEdit() {
 
         dialog.value = false;
 
-    } catch (error: any) {
-        console.error("Erro ao editar:", error.response?.data || error.message);
+    } catch (error) {
+        console.error("Erro ao editar:", error);
         errorMessage.value = "Erro ao editar. Tente novamente.";
     } finally {
         loading.value = false;

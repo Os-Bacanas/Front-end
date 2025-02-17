@@ -51,9 +51,9 @@ async function deleteUser() {
     try {
         await api.delete(`/people/${props.user.email}`);
         dialog.value = false;
-    } catch (error: any) {
-        console.error("Erro ao excluir:", error.response?.data || error.message);
-        errorMessage.value = "Erro ao excluir. Tente novamente.";
+    } catch (error) {
+        console.error("Erro ao deletar todos:", error);
+        errorMessage.value = "Erro ao deletar todos. Tente novamente.";
     } finally {
         loading.value = false;
     }

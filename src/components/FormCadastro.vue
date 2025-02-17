@@ -71,7 +71,7 @@ async function postCadastro() {
     errorMessage.value = "";
 
     try {
-        if (!valid.value) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais.";
+        if (!valid.value.email || !valid.value.cpf || !valid.value.password || !valid.value.confirmPassword) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais.";
 
         await api.post("/users/cadastro", {
             nome: formComSenha.value.nome,
@@ -82,8 +82,8 @@ async function postCadastro() {
 
         router.push("/login");
     } catch (error) {
-        errorMessage.value = "Erro ao fazer cadastro. Tente mais tarde.";
-
+        console.error("Erro ao cadastrar:", error);
+        errorMessage.value = "Erro ao cadastrar. Tente novamente.";
     } finally {
         setTimeout(() => {
             errorMessage.value = "";

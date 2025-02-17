@@ -7,8 +7,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    DialogConfirmDelete: typeof import('./src/components/dialog/DialogConfirmDelete.vue')['default']
     DialogDelete: typeof import('./src/components/dialog/DialogDelete.vue')['default']
     DialogDeleteAll: typeof import('./src/components/dialog/DialogDeleteAll.vue')['default']
+    DialogDeleteSelect: typeof import('./src/components/dialog/DialogDeleteSelect.vue')['default']
     DialogEdit: typeof import('./src/components/dialog/DialogEdit.vue')['default']
     DialogSave: typeof import('./src/components/dialog/DialogSave.vue')['default']
     FormCadastro: typeof import('./src/components/FormCadastro.vue')['default']

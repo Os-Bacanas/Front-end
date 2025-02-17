@@ -25,7 +25,6 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import { AxiosError } from 'axios';
 import { errorMessage } from '@/services/Clean';
 import { useTheme } from 'vuetify';
 import api from '@/services/api';
@@ -51,12 +50,9 @@ async function deleteAll() {
     try {
         await api.delete("/people/deleteAll");
         isConfirmed.value = false;
-    } catch (error: unknown) {
-        if (error instanceof AxiosError) {
-            errorMessage.value = error.response?.data?.message || "Erro ao deletar. Tente novamente.";
-        } else {
-            errorMessage.value = "Erro inesperado. Tente novamente.";
-        }
+    } catch (error) {
+        console.error("Erro ao deletar:", error);
+        errorMessage.value = "Erro ao deletar. Tente novamente.";
     } finally {
         loading.value = false;
     }

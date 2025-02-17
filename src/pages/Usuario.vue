@@ -1,5 +1,5 @@
 <template>
-    <v-container class="text-center text-h3">Usuários</v-container>
+    <v-container class="text-center text-h4">Usuários</v-container>
     <TableUsuarios></TableUsuarios>
 </template>
 
