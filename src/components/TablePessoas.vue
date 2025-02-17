@@ -13,8 +13,8 @@
                             <th class="text-left">Emails</th>
                             <th class="text-left">CPFs</th>
                             <th class="text-left">Telefones</th>
-                            <th class="text-left">Descrição</th>
-                            <th class="no-width">Ações</th>
+                            <th class="text-left">Descrições</th>
+                            <th class="no-width text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>

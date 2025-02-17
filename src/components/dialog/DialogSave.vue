@@ -32,9 +32,9 @@
                         <v-text-field label="Telefone*" v-model="formBase.telefone"
                             :rules="[required, telefoneIsValid]"></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="Descrição*" v-model="formBase.descricao"
-                            :rules="[required]"></v-text-field>
+                    <v-col>
+                        <v-combobox label="Descrição do Telefone*"
+                            :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']" v-model="formBase.descricao"></v-combobox>
                     </v-col>
                 </v-row>
 
