@@ -11,7 +11,8 @@
                     <thead>
                         <tr>
                             <th>
-                                <v-checkbox class="d-flex align-center" v-model="selectAll" @update:model-value="toggleSelectAll"></v-checkbox>
+                                <v-checkbox class="d-flex align-center" v-model="selectAll"
+                                    @update:model-value="toggleSelectAll"></v-checkbox>
                             </th>
                             <th class="text-left">Nomes</th>
                             <th class="text-left">Emails</th>
@@ -27,7 +28,8 @@
                         </tr>
                         <tr v-for="pessoa in displayedPessoas" :key="pessoa.email">
                             <td>
-                                <v-checkbox class="d-flex align-center" v-model="selectedItems" :value="pessoa"></v-checkbox>
+                                <v-checkbox class="d-flex align-center" v-model="selectedItems"
+                                    :value="pessoa"></v-checkbox>
                             </td>
                             <td>{{ pessoa.name ?? tableMessage }}</td>
                             <td>{{ pessoa.email ?? tableMessage }}</td>
@@ -64,7 +66,6 @@ interface Pessoa {
     description?: string;
 }
 
-
 const pessoas = ref<Pessoa[]>([]);
 const displayedPessoas = ref<Pessoa[]>([]);
 const selectedItems = ref<Pessoa[]>([]);
@@ -74,6 +75,15 @@ const displayedCount = ref(itemsPerPage);
 const isLoading = ref(false);
 const sentinela = ref(null);
 const tableMessage = 'Não informado';
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !isLoading.value) {
+        loadMorePessoas();
+    }
+}, {
+    rootMargin: '50px',
+    threshold: 1.0
+});
+
 
 async function fetchPessoas() {
     try {
@@ -112,15 +122,6 @@ function loadMorePessoas() {
         displayedCount.value = Math.min(displayedCount.value + itemsPerPage, pessoas.value.length)
     }
 };
-
-const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !isLoading.value) {
-        loadMorePessoas();
-    }
-}, {
-    rootMargin: '50px',
-    threshold: 1.0
-});
 
 watchEffect(() => {
     displayedPessoas.value = pessoas.value.slice(0, displayedCount.value);

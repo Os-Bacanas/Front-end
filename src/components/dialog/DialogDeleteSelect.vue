@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import api from '@/services/api';
 import { errorMessage } from '@/services/Clean';
 import { useTheme } from 'vuetify';
@@ -38,7 +38,6 @@ interface Pessoa {
 const deleteDialog = ref(false);
 const loading = ref(false);
 const theme = useTheme();
-const isDarkTheme = computed(() => theme.global.current.value.dark);
 
 const props = defineProps<{
     selectedItems: Pessoa[];
