@@ -41,8 +41,8 @@
 
 
 <script lang="ts" setup>
-import { required, emailIsValid } from "../services/Validacao"
-import { formComSenha, valid } from '../services/Campos'
+import { required, emailIsValid } from "../../services/Validacao"
+import { formComSenha, valid } from '../../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { onMounted } from 'vue';
 import { useRouter } from "vue-router";

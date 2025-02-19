@@ -43,13 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import Sair from '@/components/Sair.vue';
+import Sair from '@/components/usuario/Sair.vue';
 import router from '@/router';
 import { ref, onMounted } from 'vue';
 import { token, type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
 import { useTheme } from 'vuetify';
-import Profile from "../components/Profile.vue"; //erro na importacao
+import Profile from "../components/usuario/Profile.vue"; //erro na importacao
 
 const isDrawerOpen = ref(true);
 const theme = useTheme();

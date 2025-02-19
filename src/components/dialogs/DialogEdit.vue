@@ -60,7 +60,7 @@
 import { ref, watch } from 'vue';
 import { required, emailIsValid, cpfIsValid, telefoneIsValid } from "../../services/Validacao";
 import api from "../../services/api";
-import { valid, formBase } from '@/services/Campos';
+import { valid, formBase } from '../../services/Campos';
 import { clean, errorMessage } from '@/services/Clean';
 
 const dialog = ref(false);

@@ -57,13 +57,13 @@
 </template>
 
 <script lang="ts" setup>
-import { required, emailIsValid, cpfIsValid, passwordIsValid, confirmPasswordIsValid } from "../services/Validacao"
-import { formComSenha, valid } from '../services/Campos'
+import { required, emailIsValid, cpfIsValid, passwordIsValid, confirmPasswordIsValid } from "../../services/Validacao"
+import { formComSenha, valid } from '../../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 import { clean, errorMessage } from "@/services/Clean";
-import api from "../services/api";
+import api from "../../services/api";
 
 const router = useRouter();
 

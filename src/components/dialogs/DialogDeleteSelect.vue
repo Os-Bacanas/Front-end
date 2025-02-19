@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import api from '@/services/api';
+import api from '../../services/api';
 import { errorMessage } from '@/services/Clean';
 import { useTheme } from 'vuetify';
 

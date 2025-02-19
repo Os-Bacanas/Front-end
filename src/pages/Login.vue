@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import FormLogin from '../components/FormLogin.vue';
+import FormLogin from '../components/forms/FormLogin.vue';
 import { onMounted, ref } from 'vue';
 import { useTheme } from 'vuetify';
 
