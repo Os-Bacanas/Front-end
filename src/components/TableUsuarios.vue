@@ -19,11 +19,9 @@
                             <td>{{ usuario.email ?? tableMessage }}</td>
                             <td>{{ usuario.cpf ?? tableMessage }}</td>
                         </tr>
-                        <tr v-if="isLoading" ref="sentinela">
-                            <td colspan="3" class="text-center">Carregando...</td>
-                        </tr>
                     </tbody>
                 </v-table>
+                <div ref="sentinela" class="sentinela text-center"></div>
             </div>
         </v-card>
     </v-container>
@@ -51,7 +49,6 @@ async function fetchUsuarios() {
     try {
         isLoading.value = true;
         const response = await api.get('/users');
-
         usuarios.value = response.data.map((user: any) => ({
             name: user.name,
             email: user.email,
@@ -72,11 +69,12 @@ function loadMoreUsuarios() {
 
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !isLoading.value) {
+        console.log('Sentinela visível, carregando mais usuários...');
         loadMoreUsuarios();
     }
 }, {
     rootMargin: '50px',
-    threshold: 1.0
+    threshold: 0.1,
 });
 
 watchEffect(() => {
@@ -84,9 +82,11 @@ watchEffect(() => {
 });
 
 onMounted(async () => {
+    console.log('montando os componentes')
     await fetchUsuarios();
     await nextTick();
     if (sentinela.value) {
+        console.log('montando os componentes')
         observer.observe(sentinela.value);
     }
 });
@@ -98,6 +98,6 @@ onUnmounted(() => {
 
 <style scoped>
 .sentinela {
-    height: 1px;
+    height: 50px;
 }
 </style>

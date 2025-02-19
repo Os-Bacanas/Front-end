@@ -1,10 +1,11 @@
 <template>
     <v-dialog v-model="dialog" max-width="600">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn class="text-none font-weight-regular me-auto" prepend-icon="mdi-account" text="Salvar"
-                :variant="isDarkTheme ? 'flat' : 'tonal'" v-bind="activatorProps" color="green-darken-2"
-                @click="openDialog">
-            </v-btn>
+            <v-card-actions>
+                <v-btn prepend-icon="mdi-account" text="Salvar" :variant="isDarkTheme ? 'flat' : 'tonal'"
+                    v-bind="activatorProps" color="green-darken-2" @click="openDialog">
+                </v-btn>
+            </v-card-actions>
         </template>
 
         <v-card prepend-icon="mdi-account" title="Salvar Contato">
@@ -48,7 +49,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <v-btn text="Fechar" variant="plain" @click="dialog = false"></v-btn>
+                <v-btn text="Cancelar" variant="plain" @click="dialog = false"></v-btn>
 
                 <v-btn color="primary" text="Salvar" variant="tonal" @click="postLogin"
                     :disabled="!formBase.nome || !formBase.email || loading">
