@@ -10,8 +10,8 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="green" @click="confirmAction">Sim</v-btn>
                 <v-btn color="red" @click="isConfirmed = false">Não</v-btn>
+                <v-btn color="green" @click="confirmAction">Sim</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

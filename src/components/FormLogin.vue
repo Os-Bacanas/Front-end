@@ -47,7 +47,7 @@ import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { onMounted } from 'vue';
 import { useRouter } from "vue-router";
 import { jwtDecode } from "jwt-decode";
-import { getToken, type CustomJwtPayload } from '@/services/LocalStorageVerification';
+import { token, type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { clean, errorMessage } from "@/services/Clean";
 import api from "@/services/api";
 
@@ -81,9 +81,9 @@ async function postLogin() {
 onMounted(() => {
     errorMessage.value = '';
     clean(formComSenha);
-    if (getToken) {
+    if (token) {
         try {
-            const decodedToken = jwtDecode<CustomJwtPayload>(getToken);
+            const decodedToken = jwtDecode<CustomJwtPayload>(token);
             if (decodedToken.name) {
                 router.push("/usuarios");
             }

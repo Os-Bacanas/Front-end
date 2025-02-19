@@ -7,14 +7,17 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    DeletarConta: typeof import('./src/components/DeletarConta.vue')['default']
     DialogConfirmDelete: typeof import('./src/components/dialog/DialogConfirmDelete.vue')['default']
     DialogDelete: typeof import('./src/components/dialog/DialogDelete.vue')['default']
     DialogDeleteAll: typeof import('./src/components/dialog/DialogDeleteAll.vue')['default']
     DialogDeleteSelect: typeof import('./src/components/dialog/DialogDeleteSelect.vue')['default']
     DialogEdit: typeof import('./src/components/dialog/DialogEdit.vue')['default']
     DialogSave: typeof import('./src/components/dialog/DialogSave.vue')['default']
+    Editar: typeof import('./src/components/Editar.vue')['default']
     FormCadastro: typeof import('./src/components/FormCadastro.vue')['default']
     FormLogin: typeof import('./src/components/FormLogin.vue')['default']
+    Profile: typeof import('./src/components/Profile.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sair: typeof import('./src/components/Sair.vue')['default']
