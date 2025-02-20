@@ -3,15 +3,13 @@
 
         <v-app-bar flat class="border-b">
             <v-app-bar-nav-icon @click.stop="isDrawerOpen = !isDrawerOpen"></v-app-bar-nav-icon>
-            <v-toolbar-title>Sistema de Contatos</v-toolbar-title>
+            <v-toolbar-title>Sistema de Gerenciamento de Pessoas</v-toolbar-title>
 
             <template #append>
                 <v-card-text class="mr-n5 mb-n4">
-                    <v-card-subtitle>{{ nameUser }}</v-card-subtitle>
+                    <v-card-subtitle>{{ nameUser || 'Nome do usuário' }}</v-card-subtitle>
                 </v-card-text>
-                <v-avatar class="mr-5">
-                    <v-icon icon="mdi-account-circle-outline" color="blue" size="40"></v-icon>
-                </v-avatar>
+                <Profile></Profile>
             </template>
 
         </v-app-bar>
@@ -45,12 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import Sair from '@/components/Sair.vue';
+import Sair from '@/components/usuario/Sair.vue';
 import router from '@/router';
 import { ref, onMounted } from 'vue';
-import { getToken, type CustomJwtPayload } from '@/services/LocalStorageVerification';
+import { token, type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
 import { useTheme } from 'vuetify';
+import Profile from "../components/usuario/Profile.vue"; //erro na importacao
 
 const isDrawerOpen = ref(true);
 const theme = useTheme();
@@ -71,12 +70,12 @@ onMounted(() => {
         theme.global.name.value = isDarkTheme.value ? "dark" : "light";
     }
 
-    if (!getToken) {
+    if (!token) {
         return;// router.push('/login') // Redirecionar para login se não houver token
     }
 
     try {
-        const decodedToken = jwtDecode<CustomJwtPayload>(getToken);
+        const decodedToken = jwtDecode<CustomJwtPayload>(token);
         nameUser = decodedToken.name;
     } catch (error) {
         console.error("Erro ao decodificar o token:", error);

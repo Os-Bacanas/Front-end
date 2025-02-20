@@ -2,7 +2,7 @@
     <v-container>
         <v-card class="mx-10">
             <div class="pa-4">
-                <v-table height="300px" fixed-header>
+                <v-table height="500px" fixed-header>
                     <thead>
                         <tr>
                             <th class="text-left">Nomes</th>
@@ -69,7 +69,6 @@ function loadMoreUsuarios() {
 
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !isLoading.value) {
-        console.log('Sentinela visível, carregando mais usuários...');
         loadMoreUsuarios();
     }
 }, {
@@ -82,11 +81,9 @@ watchEffect(() => {
 });
 
 onMounted(async () => {
-    console.log('montando os componentes')
     await fetchUsuarios();
     await nextTick();
     if (sentinela.value) {
-        console.log('montando os componentes')
         observer.observe(sentinela.value);
     }
 });

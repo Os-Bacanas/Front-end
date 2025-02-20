@@ -3,5 +3,5 @@
 </template>
 
 <script lang="ts" setup>
-import FormCadastro from '../components/FormCadastro.vue';
+import FormCadastro from '../components/forms/FormCadastro.vue';
 </script>

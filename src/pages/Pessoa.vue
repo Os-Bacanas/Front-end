@@ -4,5 +4,5 @@
 </template>
 
 <script lang="ts" setup>
-import TablePessoas from '@/components/TablePessoas.vue';
+import TablePessoas from '@/components/tables/TablePessoas.vue';
 </script>

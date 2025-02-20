@@ -1,21 +1,20 @@
-
-import { createRouter, createWebHistory } from 'vue-router'
-import Login from '@/pages/Login.vue'
-import Index from '../layout/Index.vue'
-import Pessoa from '@/pages/Pessoa.vue'
-import Usuario from '@/pages/Usuario.vue'
-import Cadastro from '@/pages/Cadastro.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import Login from "@/pages/Login.vue";
+import Index from "../layout/Index.vue";
+import Pessoa from "@/pages/Pessoa.vue";
+import Usuario from "@/pages/Usuario.vue";
+import Cadastro from "@/pages/Cadastro.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/login',
-      component: Login
+      path: "/login",
+      component: Login,
     },
     {
-      path: '/cadastro',
-      component: Cadastro
+      path: "/cadastro",
+      component: Cadastro,
     },
     {
       path: "/",
@@ -27,11 +26,11 @@ const router = createRouter({
         },
         {
           path: "usuarios",
-          component: Usuario
-        }
-      ]
-    }
-  ]
-})
+          component: Usuario,
+        },
+      ],
+    },
+  ],
+});
 
-export default router
+export default router;

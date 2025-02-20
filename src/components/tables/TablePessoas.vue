@@ -7,7 +7,7 @@
                     <v-spacer />
                     <DialogSave />
                 </v-card-title>
-                <v-table height="300px" fixed-header>
+                <v-table height="500px" fixed-header>
                     <thead>
                         <tr>
                             <th>
@@ -53,9 +53,9 @@
 
 <script lang="ts" setup>
 import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue';
-import DialogSave from './dialog/DialogSave.vue';
-import DialogEdit from './dialog/DialogEdit.vue';
-import DialogDeleteSelect from './dialog/DialogDeleteSelect.vue';
+import DialogEdit from '../dialogs/DialogEdit.vue';
+import DialogSave from '../dialogs/DialogSave.vue';
+import DialogDeleteSelect from '../dialogs/DialogDeleteSelect.vue';
 import api from '@/services/api';
 
 interface Pessoa {

@@ -1,12 +1,14 @@
 <template>
     <v-dialog v-model="dialog" max-width="600">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon color="primary" variant="text" v-bind="activatorProps" @click="resetForm">
-                <v-icon>mdi-pencil</v-icon>
-            </v-btn>
+            <v-card-actions>
+                <v-btn prepend-icon="mdi-account" text="Salvar" :variant="isDarkTheme ? 'flat' : 'tonal'"
+                    v-bind="activatorProps" color="green-darken-2" @click="openDialog">
+                </v-btn>
+            </v-card-actions>
         </template>
 
-        <v-card prepend-icon="mdi-pencil" title="Editar Contato">
+        <v-card prepend-icon="mdi-account" title="Salvar Pessoa">
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}
@@ -26,7 +28,6 @@
                     <v-col cols="12" md="4" sm="6">
                         <v-text-field label="CPF" v-model="formBase.cpf" :rules="[cpfIsValid]"></v-text-field>
                     </v-col>
-
                     <v-col cols="12" md="4" sm="6">
                         <v-text-field label="Telefone*" v-model="formBase.telefone"
                             :rules="[required, telefoneIsValid]"></v-text-field>
@@ -42,6 +43,7 @@
             </v-card-text>
 
             <v-divider></v-divider>
+
             <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
             <v-card-actions>
@@ -49,70 +51,54 @@
 
                 <v-btn text="Cancelar" variant="plain" @click="dialog = false"></v-btn>
 
-                <v-btn color="primary" text="Editar" variant="tonal" @click="putEdit"
-                    :disabled="!formBase.nome || !formBase.email || !formBase.telefone || loading"></v-btn>
+                <v-btn color="primary" text="Salvar" variant="tonal" @click="postLogin"
+                    :disabled="!formBase.nome || !formBase.email || loading">
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { required, emailIsValid, cpfIsValid, telefoneIsValid } from "../../services/Validacao";
+import { formBase, valid } from '../../services/Campos';
 import api from "../../services/api";
-import { valid, formBase } from '@/services/Campos';
 import { clean, errorMessage } from '@/services/Clean';
+import { useTheme } from 'vuetify';
 
 const dialog = ref(false);
 const loading = ref(false);
-const props = defineProps<{
-    pessoa?: {
-        nome: string;
-        email: string;
-        cpf: string;
-        telefone: string;
-        descricao: string;
-    };
-}>();
+const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.current.value.dark);
 
-watch(dialog, (newVal) => {
-    if (newVal && props.pessoa) {
-        formBase.value = Object.assign({}, props.pessoa);
-    }
-});
-
-function resetForm() {
+function openDialog() {
     errorMessage.value = ''
-    if (props.pessoa) {
-        formBase.value = Object.assign({}, props.pessoa);
-    } else {
-        clean(formBase);
-    }
+    clean(formBase);
+    dialog.value = true;
 }
 
-async function putEdit() {
-    errorMessage.value = ''
-    if (!props.pessoa) {
-        return dialog.value = false;
-    }
 
+async function postLogin() {
     loading.value = true;
 
     try {
-        if (!valid.value.email || !valid.value.telefone || !valid.value.cpf) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+        if (!valid.value.email || !valid.value.cpf || !valid.value.telefone) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
 
-        await api.put(`/people/${props.pessoa.email}`, {
+        await api.post("/people", {
             nome: formBase.value.nome,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
-            telefone: formBase.value.telefone,
+            phone: formBase.value.telefone,
+            description: formBase.value.descricao,
         });
 
         dialog.value = false;
+        clean(formBase);
 
     } catch (error) {
-        console.error("Erro ao editar:", error);
-        errorMessage.value = "Erro ao editar. Tente novamente.";
+        console.error("Erro ao salvar:", error);
+        errorMessage.value = "Erro ao salvar. Tente novamente.";
     } finally {
         loading.value = false;
     }

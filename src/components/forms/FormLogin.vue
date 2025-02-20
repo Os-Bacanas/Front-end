@@ -41,13 +41,13 @@
 
 
 <script lang="ts" setup>
-import { required, emailIsValid } from "../services/Validacao"
-import { formComSenha, valid } from '../services/Campos'
+import { required, emailIsValid } from "../../services/Validacao"
+import { formComSenha, valid } from '../../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { onMounted } from 'vue';
 import { useRouter } from "vue-router";
 import { jwtDecode } from "jwt-decode";
-import { getToken, type CustomJwtPayload } from '@/services/LocalStorageVerification';
+import { token, type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { clean, errorMessage } from "@/services/Clean";
 import api from "@/services/api";
 
@@ -65,7 +65,7 @@ async function postLogin() {
         });
 
         localStorage.setItem("token", response.data.token);
-        router.push("/");
+        router.push("/usuarios");
 
     } catch (error) {
         console.error("Erro ao fazer o login:", error);
@@ -81,11 +81,11 @@ async function postLogin() {
 onMounted(() => {
     errorMessage.value = '';
     clean(formComSenha);
-    if (getToken) {
+    if (token) {
         try {
-            const decodedToken = jwtDecode<CustomJwtPayload>(getToken);
+            const decodedToken = jwtDecode<CustomJwtPayload>(token);
             if (decodedToken.name) {
-                router.push("/usuarios");
+                router.push("/home");
             }
         } catch (error) {
             console.error("Erro ao decodificar o token:", error);
