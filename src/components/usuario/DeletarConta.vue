@@ -1,5 +1,6 @@
 <template>
-    <v-list-item title="Deletar Conta" prepend-icon="mdi-delete" @click="openDialog()" class="text-red-accent-3"></v-list-item>
+    <v-list-item title="Deletar Conta" prepend-icon="mdi-delete" @click="openDialog()"
+        class="text-red-accent-3"></v-list-item>
 
     <v-dialog v-model="isConfirmed" max-width="340">
         <v-card title="Deseja deletar a conta?" prepend-icon="mdi-close">

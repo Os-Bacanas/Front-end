@@ -24,8 +24,8 @@
                 </v-row>
                 <small class="text-caption text-medium-emphasis">*Preencha os dados corretamente</small>
             </v-card-text>
-
             <v-divider></v-divider>
+
             <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
 
             <v-card-actions>
@@ -55,6 +55,12 @@ const name = ref('');
 const email = ref('');
 const cpf = ref('');
 
+function openDialog() {
+    errorMessage.value = "";
+    loadUserData();
+    isConfirmed.value = true;
+}
+
 function loadUserData() {
     if (!token) {
         console.error('o usuario nao tem token')
@@ -76,12 +82,6 @@ function loadUserData() {
         console.error('Erro ao decodificar o token: ', error);
         errorMessage.value = "Erro inesperado, tente mais tarde.";
     }
-}
-
-function openDialog() {
-    errorMessage.value = "";
-    loadUserData();
-    isConfirmed.value = true;
 }
 
 async function confirmAction() {
