@@ -57,6 +57,7 @@ const cpf = ref('');
 
 function loadUserData() {
     if (!token) {
+        console.error('o usuario nao tem token')
         errorMessage.value = "Não é possível editar a conta. Faça login novamente.";
         loading.value = false;
         return;

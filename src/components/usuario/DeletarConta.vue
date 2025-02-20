@@ -1,11 +1,8 @@
 <template>
-    <v-list-item title="Deletar Conta" prepend-icon="mdi-delete" @click="openDialog()"></v-list-item>
+    <v-list-item title="Deletar Conta" prepend-icon="mdi-delete" @click="openDialog()" class="text-red-accent-3"></v-list-item>
 
     <v-dialog v-model="isConfirmed" max-width="340">
-        <v-card>
-            <v-card-title class="text-h5">
-                Deseja deletar a conta?
-            </v-card-title>
+        <v-card title="Deseja deletar a conta?" prepend-icon="mdi-close">
             <v-card-subtitle>Impossível recuperar os dados depois.</v-card-subtitle>
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
@@ -43,6 +40,7 @@ function openDialog() {
 async function confirmAction() {
     loading.value = true;
     if (!token) {
+        console.error('usuario nao tem token')
         errorMessage.value = "Não é possível remover a conta, faça login novamente.";
         loading.value = false;
         return;

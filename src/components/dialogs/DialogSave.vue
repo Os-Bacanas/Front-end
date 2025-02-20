@@ -8,7 +8,7 @@
             </v-card-actions>
         </template>
 
-        <v-card prepend-icon="mdi-account" title="Salvar Contato">
+        <v-card prepend-icon="mdi-account" title="Salvar Pessoa">
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}

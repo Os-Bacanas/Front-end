@@ -3,7 +3,7 @@
 
         <v-app-bar flat class="border-b">
             <v-app-bar-nav-icon @click.stop="isDrawerOpen = !isDrawerOpen"></v-app-bar-nav-icon>
-            <v-toolbar-title>Sistema de Contatos</v-toolbar-title>
+            <v-toolbar-title>Sistema de Gerenciamento de Pessoas</v-toolbar-title>
 
             <template #append>
                 <v-card-text class="mr-n5 mb-n4">

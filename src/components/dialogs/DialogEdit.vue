@@ -6,7 +6,7 @@
             </v-btn>
         </template>
 
-        <v-card prepend-icon="mdi-pencil" title="Editar Contato">
+        <v-card prepend-icon="mdi-pencil" title="Editar Pessoa">
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}

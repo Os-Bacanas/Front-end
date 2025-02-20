@@ -2,7 +2,7 @@
     <v-container>
         <v-card class="mx-10">
             <div class="pa-4">
-                <v-table height="300px" fixed-header>
+                <v-table height="500px" fixed-header>
                     <thead>
                         <tr>
                             <th class="text-left">Nomes</th>

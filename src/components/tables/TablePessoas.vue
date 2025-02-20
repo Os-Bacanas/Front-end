@@ -7,7 +7,7 @@
                     <v-spacer />
                     <DialogSave />
                 </v-card-title>
-                <v-table height="300px" fixed-header>
+                <v-table height="500px" fixed-header>
                     <thead>
                         <tr>
                             <th>

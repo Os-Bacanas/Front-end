@@ -65,7 +65,7 @@ async function postLogin() {
         });
 
         localStorage.setItem("token", response.data.token);
-        router.push("/");
+        router.push("/usuarios");
 
     } catch (error) {
         console.error("Erro ao fazer o login:", error);
@@ -85,7 +85,7 @@ onMounted(() => {
         try {
             const decodedToken = jwtDecode<CustomJwtPayload>(token);
             if (decodedToken.name) {
-                router.push("/usuarios");
+                router.push("/home");
             }
         } catch (error) {
             console.error("Erro ao decodificar o token:", error);
