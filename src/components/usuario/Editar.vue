@@ -1,7 +1,7 @@
 <template>
     <v-list-item title="Editar conta" prepend-icon="mdi-pencil" @click="openDialog()"></v-list-item>
 
-    <v-dialog v-model="isConfirmed" max-width="500">
+    <v-dialog v-model="isConfirmed" max-width="700">
         <v-card title="Editar conta" prepend-icon="mdi-pencil">
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">

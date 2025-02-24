@@ -3,14 +3,14 @@
         <v-card class="mx-10">
             <div class="pa-4">
                 <v-table height="500px" fixed-header>
-                    <thead>
+                    <thead class="text-button">
                         <tr>
                             <th class="text-left">Nomes</th>
                             <th class="text-left">Emails</th>
                             <th class="text-left">CPFs</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-body-2">
                         <tr v-if="displayedUsuarios.length === 0 && !isLoading">
                             <td colspan="3" class="text-center">Nenhuma pessoa cadastrada</td>
                         </tr>

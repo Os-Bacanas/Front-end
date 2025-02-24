@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" max-width="600">
+    <v-dialog v-model="dialog" max-width="700">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn icon color="primary" variant="text" v-bind="activatorProps" @click="resetForm">
                 <v-icon>mdi-pencil</v-icon>

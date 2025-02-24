@@ -2,7 +2,7 @@
 
     <v-list-item title="Sair" prepend-icon="mdi-logout" @click="isConfirmed = true"></v-list-item>
 
-    <v-dialog v-model="isConfirmed" max-width="340">
+    <v-dialog v-model="isConfirmed" max-width="400">
         <v-card>
             <v-card-title class="text-h5">
                 Deseja sair?

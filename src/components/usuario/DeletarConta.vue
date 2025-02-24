@@ -2,7 +2,7 @@
     <v-list-item title="Deletar Conta" prepend-icon="mdi-delete" @click="openDialog()"
         class="text-red-accent-3"></v-list-item>
 
-    <v-dialog v-model="isConfirmed" max-width="340">
+    <v-dialog v-model="isConfirmed" max-width="400">
         <v-card title="Deseja deletar a conta?" prepend-icon="mdi-close">
             <v-card-subtitle>Impossível recuperar os dados depois.</v-card-subtitle>
 

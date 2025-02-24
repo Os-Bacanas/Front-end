@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="deleteDialog" max-width="400">
+    <v-dialog v-model="deleteDialog" max-width="500">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn color="red" prepend-icon="mdi-close" :disabled="selectedItems.length === 0" v-bind="activatorProps"
                 @click="openDialog" variant="flat">

@@ -2,7 +2,7 @@
     <v-menu v-model="openMenu" :close-on-content-click="false" location="end">
         <template v-slot:activator="{ props }">
             <v-avatar class="mr-5">
-                <v-icon icon="mdi-account-circle-outline" color="blue" size="40" v-bind="props"></v-icon>
+                <v-icon icon="mdi-account-circle-outline" color="blue" size="50" v-bind="props"></v-icon>
             </v-avatar>
         </template>
 
@@ -12,8 +12,7 @@
                     <v-list-item-subtitle>{{ emailUser }}</v-list-item-subtitle>
                     <v-list-item-subtitle>{{ cpfUser }}</v-list-item-subtitle>
                 </v-list-item>
-                <v-list-item class="align-center" size="x-large"
-                    append-icon="mdi-file-document-multiple-outline"><v-icon></v-icon></v-list-item>
+                <v-list-item class="align-center" size="x-large"#append><v-icon size="50" color="blue" class="pl-5">mdi-account</v-icon></v-list-item>
             </v-list>
 
             <v-divider></v-divider>

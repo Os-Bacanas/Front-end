@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" max-width="600">
+    <v-dialog v-model="dialog" max-width="700">
         <template v-slot:activator="{ props: activatorProps }">
             <v-card-actions>
                 <v-btn prepend-icon="mdi-account" text="Salvar" :variant="isDarkTheme ? 'flat' : 'tonal'"

@@ -8,7 +8,7 @@
                     <DialogSave />
                 </v-card-title>
                 <v-table height="500px" fixed-header>
-                    <thead>
+                    <thead class="text-button">
                         <tr>
                             <th>
                                 <v-checkbox class="d-flex align-center" v-model="selectAll"
@@ -22,7 +22,7 @@
                             <th class="no-width text-center">Ações</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-body-2">
                         <tr v-if="displayedPessoas.length === 0">
                             <td colspan="6" class="text-center">Nenhuma pessoa cadastrada</td>
                         </tr>
@@ -169,3 +169,9 @@ onUnmounted(() => {
     observer.disconnect();
 });
 </script>
+
+<style scoped>
+.no-width {
+    width: 0px !important;
+}
+</style>

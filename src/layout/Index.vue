@@ -6,8 +6,8 @@
             <v-toolbar-title>Sistema de Gerenciamento de Pessoas</v-toolbar-title>
 
             <template #append>
-                <v-card-text class="mr-n5 mb-n4">
-                    <v-card-subtitle>{{ nameUser || 'Nome do usuário' }}</v-card-subtitle>
+                <v-card-text class="mr-n7 mb-n4">
+                    <v-card-subtitle class="text-overline">{{ nameUser || 'Nome do usuário' }}</v-card-subtitle>
                 </v-card-text>
                 <Profile></Profile>
             </template>
