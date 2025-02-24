@@ -78,19 +78,23 @@ function openDialog() {
     dialog.value = true;
 }
 
-
 async function postLogin() {
     loading.value = true;
 
     try {
-        if (!valid.value.email || !valid.value.cpf || !valid.value.telefone) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
-
-        await api.post("/people", {
-            nome: formBase.value.nome,
+        if (!valid.value.email || !valid.value.cpf || !valid.value.telefone) {
+            return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+        }
+        await api.post("/pessoas", {
+            name: formBase.value.nome,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
-            phone: formBase.value.telefone,
-            description: formBase.value.descricao,
+            phones: [
+                {
+                    number: formBase.value.telefone,
+                    typePhone: formBase.value.descricao
+                }
+            ]
         });
 
         dialog.value = false;

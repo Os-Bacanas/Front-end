@@ -41,7 +41,7 @@
 import { computed, ref } from 'vue';
 import api from '@/services/api';
 import { errorMessage } from '@/services/Clean';
-import { type CustomJwtPayload, token } from '@/services/LocalStorageVerification';
+import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
 import { required, emailIsValid, cpfIsValid } from '@/services/Validacao';
 import { useTheme } from 'vuetify';
@@ -54,6 +54,7 @@ const id = ref();
 const name = ref('');
 const email = ref('');
 const cpf = ref('');
+const token = localStorage.getItem('accessToken');
 
 function openDialog() {
     errorMessage.value = "";
@@ -68,13 +69,12 @@ function loadUserData() {
         loading.value = false;
         return;
     }
-
     try {
         const decodedToken = jwtDecode<CustomJwtPayload>(token);
-        if (!decodedToken.id) {
+        if (!decodedToken.sub) {
             throw new Error("Token inválido");
         }
-        id.value = decodedToken.id;
+        id.value = decodedToken.sub;
         name.value = decodedToken.name;
         email.value = decodedToken.email;
         cpf.value = decodedToken.cpf;
@@ -88,7 +88,8 @@ async function confirmAction() {
     loading.value = true;
     errorMessage.value = '';
     try {
-        await api.put(`/users/update/${id.value}`, {
+        await api.put('/users', {
+            id: id.value,
             name: name.value,
             email: email.value,
             cpf: cpf.value

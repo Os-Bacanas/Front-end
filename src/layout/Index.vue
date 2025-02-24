@@ -46,10 +46,10 @@
 import Sair from '@/components/usuario/Sair.vue';
 import router from '@/router';
 import { ref, onMounted } from 'vue';
-import { token, type CustomJwtPayload } from '@/services/LocalStorageVerification';
+import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
 import { useTheme } from 'vuetify';
-import Profile from "../components/usuario/Profile.vue"; //erro na importacao
+import Profile from "../components/usuario/Profile.vue";
 
 const isDrawerOpen = ref(true);
 const theme = useTheme();
@@ -70,17 +70,21 @@ onMounted(() => {
         theme.global.name.value = isDarkTheme.value ? "dark" : "light";
     }
 
-    if (!token) {
-        return;// router.push('/login') // Redirecionar para login se não houver token
+    const savedToken = localStorage.getItem("accessToken");
+    if (!savedToken) {
+        setTimeout(() => {
+            return router.replace('/login');
+        }, 500);
+        return;
     }
 
     try {
-        const decodedToken = jwtDecode<CustomJwtPayload>(token);
+        const decodedToken = jwtDecode<CustomJwtPayload>(savedToken);
         nameUser = decodedToken.name;
     } catch (error) {
         console.error("Erro ao decodificar o token:", error);
-        localStorage.removeItem("token");
-        // router.push("/login"); // Redirecionar para login em caso de erro
+        localStorage.removeItem("accessToken");
+        router.replace("/login");
     }
 });
 </script>

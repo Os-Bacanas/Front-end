@@ -34,7 +34,9 @@
                     <v-col>
                         <v-combobox label="Descrição do Telefone*"
                             :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
-                            v-model="formBase.descricao"></v-combobox>
+                            v-model="formBase.descricao" :rules="[required]" item-value="descricao"
+                            item-text="descricao">
+                        </v-combobox>
                     </v-col>
                 </v-row>
 
@@ -82,7 +84,7 @@ watch(dialog, (newVal) => {
 });
 
 function resetForm() {
-    errorMessage.value = ''
+    errorMessage.value = '';
     if (props.pessoa) {
         formBase.value = Object.assign({}, props.pessoa);
     } else {
@@ -91,7 +93,7 @@ function resetForm() {
 }
 
 async function putEdit() {
-    errorMessage.value = ''
+    errorMessage.value = '';
     if (!props.pessoa) {
         return dialog.value = false;
     }
@@ -99,17 +101,22 @@ async function putEdit() {
     loading.value = true;
 
     try {
-        if (!valid.value.email || !valid.value.telefone || !valid.value.cpf) return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+        if (!valid.value.email || !valid.value.telefone || !valid.value.cpf) {
+            return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+        }
 
-        await api.put(`/people/${props.pessoa.email}`, {
-            nome: formBase.value.nome,
+        await api.put('/pessoas', {
+            name: formBase.value.nome,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
-            telefone: formBase.value.telefone,
+            phones: [
+                {
+                    number: formBase.value.telefone,
+                    typePhone: formBase.value.descricao
+                }
+            ]
         });
-
         dialog.value = false;
-
     } catch (error) {
         console.error("Erro ao editar:", error);
         errorMessage.value = "Erro ao editar. Tente novamente.";

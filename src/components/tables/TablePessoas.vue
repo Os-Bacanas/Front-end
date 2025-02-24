@@ -12,7 +12,7 @@
                         <tr>
                             <th>
                                 <v-checkbox class="d-flex align-center" v-model="selectAll"
-                                    @update:model-value="toggleSelectAll"></v-checkbox>
+                                    @change="toggleSelectAll"></v-checkbox>
                             </th>
                             <th class="text-left">Nomes</th>
                             <th class="text-left">Emails</th>
@@ -34,12 +34,36 @@
                             <td>{{ pessoa.name ?? tableMessage }}</td>
                             <td>{{ pessoa.email ?? tableMessage }}</td>
                             <td>{{ pessoa.cpf ?? tableMessage }}</td>
-                            <td>{{ pessoa.phone ?? tableMessage }}</td>
-                            <td>{{ pessoa.description ?? tableMessage }}</td>
+                            <td>
+                                <div v-if="pessoa.phones && pessoa.phones.length">
+                                    <div v-for="(phone, index) in pessoa.phones" :key="index">
+                                        {{ phone.number ?? tableMessage }}
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    {{ tableMessage }}
+                                </div>
+                            </td>
+                            <td>
+                                <div v-if="pessoa.phones && pessoa.phones.length">
+                                    <div v-for="(phone, index) in pessoa.phones" :key="index">
+                                        {{ phone.typePhone ?? tableMessage }}
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    {{ tableMessage }}
+                                </div>
+                            </td>
                             <td class="no-width">
                                 <v-btn-group>
-                                    <DialogEdit
-                                        :pessoa="{ nome: pessoa.name || '', email: pessoa.email || '', cpf: pessoa.cpf || '', telefone: pessoa.phone || '', descricao: pessoa.description || '' }" />
+                                    <DialogEdit :pessoa="{
+                                        nome: pessoa.name || '',
+                                        email: pessoa.email || '',
+                                        cpf: pessoa.cpf || '',
+                                        telefone: pessoa.phones?.[0]?.number || '',
+                                        descricao: pessoa.phones?.[0]?.typePhone || ''
+                                    }" />
+
                                 </v-btn-group>
                             </td>
                         </tr>
@@ -57,13 +81,13 @@ import DialogEdit from '../dialogs/DialogEdit.vue';
 import DialogSave from '../dialogs/DialogSave.vue';
 import DialogDeleteSelect from '../dialogs/DialogDeleteSelect.vue';
 import api from '@/services/api';
+import Pessoa from '@/pages/Pessoa.vue';
 
 interface Pessoa {
     name?: string;
     email: string;
     cpf?: string;
-    phone?: string;
-    description?: string;
+    phones?: { number: string; typePhone?: string }[];
 }
 
 const pessoas = ref<Pessoa[]>([]);
@@ -84,17 +108,18 @@ const observer = new IntersectionObserver((entries) => {
     threshold: 1.0
 });
 
-
 async function fetchPessoas() {
     try {
         isLoading.value = true;
-        const response = await api.get('/users');
+        const response = await api.get('/pessoas');
         pessoas.value = response.data.map((person: any) => ({
             name: person.name,
             email: person.email,
             cpf: person.cpf,
-            phone: person.phone,
-            description: person.description,
+            phones: person.phones ? person.phones.map((phone: any) => ({
+                number: phone.number,
+                typePhone: phone.typePhone
+            })) : []
         }));
     } catch (error) {
         console.error('Erro ao buscar pessoas: ', error);
@@ -103,8 +128,8 @@ async function fetchPessoas() {
     }
 }
 
-function toggleSelectAll(value: any) {
-    if (value) {
+function toggleSelectAll() {
+    if (selectAll.value) {
         selectedItems.value = [...displayedPessoas.value];
     } else {
         selectedItems.value = [];
@@ -144,9 +169,3 @@ onUnmounted(() => {
     observer.disconnect();
 });
 </script>
-
-<style scoped>
-.no-width {
-    width: 0px !important;
-}
-</style>

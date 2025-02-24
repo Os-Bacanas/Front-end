@@ -31,9 +31,10 @@ import { ref, computed } from 'vue';
 import DeletarConta from './DeletarConta.vue';
 import Editar from './Editar.vue';
 import { jwtDecode } from 'jwt-decode';
-import { token, type CustomJwtPayload } from '@/services/LocalStorageVerification';
+import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
 
 const openMenu = ref(false);
+const token = localStorage.getItem('accessToken');
 
 let decodedToken: CustomJwtPayload | null = null;
 try {

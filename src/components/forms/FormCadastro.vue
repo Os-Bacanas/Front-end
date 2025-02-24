@@ -74,12 +74,11 @@ async function postCadastro() {
         if (!valid.value.email || !valid.value.cpf || !valid.value.password || !valid.value.confirmPassword) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais.";
 
         await api.post("/users/cadastro", {
-            nome: formComSenha.value.nome,
+            name: formComSenha.value.nome,
             cpf: formComSenha.value.cpf,
             email: formComSenha.value.email,
-            password: formComSenha.value.password,
+            senha: formComSenha.value.password,
         });
-
         router.push("/login");
     } catch (error) {
         console.error("Erro ao cadastrar:", error);

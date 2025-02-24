@@ -58,7 +58,7 @@ async function deleteSelected() {
 
     try {
         const emailsToDelete = props.selectedItems.map((item: Pessoa) => item.email);
-        await api.delete('/users', { data: emailsToDelete });
+        await api.delete('/pessoas/deletar-emails', { data: emailsToDelete });
         emit("deleted", emailsToDelete);
         deleteDialog.value = false;
     } catch (error) {

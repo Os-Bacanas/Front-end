@@ -26,7 +26,7 @@ const isConfirmed = ref(false);
 
 function confirmAction() {
     isConfirmed.value = false;
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem('theme');
     router.push("/login");
 }

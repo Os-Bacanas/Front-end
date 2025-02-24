@@ -8,9 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     DeletarConta: typeof import('./src/components/usuario/DeletarConta.vue')['default']
-    DialogConfirmDelete: typeof import('./src/components/dialog/DialogConfirmDelete.vue')['default']
-    DialogDelete: typeof import('./src/components/dialog/DialogDelete.vue')['default']
-    DialogDeleteAll: typeof import('./src/components/dialog/DialogDeleteAll.vue')['default']
     DialogDeleteSelect: typeof import('./src/components/dialogs/DialogDeleteSelect.vue')['default']
     DialogEdit: typeof import('./src/components/dialogs/DialogEdit.vue')['default']
     DialogSave: typeof import('./src/components/dialogs/DialogSave.vue')['default']

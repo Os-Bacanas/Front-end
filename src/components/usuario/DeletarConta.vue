@@ -26,12 +26,13 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/services/api';
 import { errorMessage } from '@/services/Clean';
-import { type CustomJwtPayload, token } from '@/services/LocalStorageVerification';
+import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
 
 const router = useRouter();
 const isConfirmed = ref(false);
 const loading = ref(false);
+const token = localStorage.getItem('accessToken');
 
 function openDialog() {
     errorMessage.value = "";
@@ -49,8 +50,8 @@ async function confirmAction() {
     let decodedToken: CustomJwtPayload;
     try {
         decodedToken = jwtDecode<CustomJwtPayload>(token);
-        await api.delete(`/users/delete/${decodedToken.id}`);
-        localStorage.removeItem("token");
+        await api.delete(`/users/${decodedToken.sub}`);
+        localStorage.removeItem("accessToken");
         localStorage.removeItem("theme");
         router.push("/login");
         isConfirmed.value = false;
