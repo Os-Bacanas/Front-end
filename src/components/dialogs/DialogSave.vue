@@ -80,7 +80,6 @@ function openDialog() {
 
 async function postLogin() {
     loading.value = true;
-
     try {
         if (!valid.value.email || !valid.value.cpf || !valid.value.telefone) {
             return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
@@ -92,14 +91,14 @@ async function postLogin() {
             phones: [
                 {
                     number: formBase.value.telefone,
-                    typePhone: formBase.value.descricao
+                    typePhoneDTO: {
+                        description: formBase.value.descricao
+                    }
                 }
             ]
         });
-
         dialog.value = false;
         clean(formBase);
-
     } catch (error) {
         console.error("Erro ao salvar:", error);
         errorMessage.value = "Erro ao salvar. Tente novamente.";
@@ -107,4 +106,5 @@ async function postLogin() {
         loading.value = false;
     }
 };
+
 </script>

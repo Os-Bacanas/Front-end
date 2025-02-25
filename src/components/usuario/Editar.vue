@@ -97,7 +97,7 @@ async function confirmAction() {
         isConfirmed.value = false;
     } catch (error) {
         console.error('Erro ao editar usuário: ', error);
-        errorMessage.value = "Não foi possível editar sua conta, tente mais tarde.";
+        errorMessage.value = "Não foi possível editar sua conta.";
     } finally {
         loading.value = false;
     }

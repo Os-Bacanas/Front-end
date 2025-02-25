@@ -69,6 +69,7 @@ const dialog = ref(false);
 const loading = ref(false);
 const props = defineProps<{
     pessoa?: {
+        id: string;
         nome: string;
         email: string;
         cpf: string;
@@ -104,15 +105,17 @@ async function putEdit() {
         if (!valid.value.email || !valid.value.telefone || !valid.value.cpf) {
             return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
         }
-
         await api.put('/pessoas', {
+            id: formBase.value.id,
             name: formBase.value.nome,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
             phones: [
                 {
                     number: formBase.value.telefone,
-                    typePhone: formBase.value.descricao
+                    typePhoneDTO: {
+                        description: formBase.value.descricao
+                    }
                 }
             ]
         });
