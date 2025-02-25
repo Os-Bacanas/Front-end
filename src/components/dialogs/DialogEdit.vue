@@ -120,6 +120,7 @@ async function putEdit() {
             ]
         });
         dialog.value = false;
+        window.location.reload();
     } catch (error) {
         console.error("Erro ao editar:", error);
         errorMessage.value = "Erro ao editar. Tente novamente.";

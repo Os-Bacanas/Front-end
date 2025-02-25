@@ -61,6 +61,7 @@ async function deleteSelected() {
         await api.delete('/pessoas/deletar-emails', { data: emailsToDelete });
         emit("deleted", emailsToDelete);
         deleteDialog.value = false;
+        window.location.reload();
     } catch (error) {
         console.error("Erro ao deletar pessoas:", error);
         errorMessage.value = "Erro ao tentar deletar as pessoas . Tente novamente.";

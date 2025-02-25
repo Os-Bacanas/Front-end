@@ -95,6 +95,7 @@ async function confirmAction() {
             cpf: cpf.value
         });
         isConfirmed.value = false;
+        window.location.reload();
     } catch (error) {
         console.error('Erro ao editar usuário: ', error);
         errorMessage.value = "Não foi possível editar sua conta.";

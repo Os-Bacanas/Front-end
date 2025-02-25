@@ -99,6 +99,7 @@ async function postLogin() {
         });
         dialog.value = false;
         clean(formBase);
+        window.location.reload();
     } catch (error) {
         console.error("Erro ao salvar:", error);
         errorMessage.value = "Erro ao salvar. Tente novamente.";
