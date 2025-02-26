@@ -88,16 +88,20 @@ async function confirmAction() {
     loading.value = true;
     errorMessage.value = '';
     try {
-        await api.put('/users', {
+        const response = await api.put('/users', {
             id: id.value,
             name: name.value,
             email: email.value,
             cpf: cpf.value
         });
+        const newToken = response.data.accessToken;
+        if (newToken) {
+            localStorage.setItem('accessToken', newToken);
+        }
         isConfirmed.value = false;
         window.location.reload();
     } catch (error) {
-        console.error('Erro ao editar usuário: ', error);
+        console.error("Erro ao fazer o PUT:", error);
         errorMessage.value = "Não foi possível editar sua conta.";
     } finally {
         loading.value = false;
