@@ -6,7 +6,11 @@
                 Deletar
             </v-btn>
         </template>
-        <v-card title="Confirmar Exclusão" prepend-icon="mdi-delete-forever">
+        <v-card>
+            <v-container class="text-h6">
+                <v-icon class="mx-2 " :color="isDarkTheme ? '#F44336' : '#D32F2F'">mdi-delete-forever</v-icon>
+                <v-title>Confirmar Exclusão</v-title>
+            </v-container>
             <v-card-text class="mb-n5">Tem certeza que deseja excluir os {{ selectedItems.length }} itens
                 selecionados?</v-card-text>
 
@@ -19,14 +23,15 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="grey" @click="deleteDialog = false">Cancelar</v-btn>
-                <v-btn color="red" :disabled="loading" @click="deleteSelected">Excluir</v-btn>
+                <v-btn color="red" :disabled="loading" @click="deleteSelected"
+                    :variant="isDarkTheme ? 'tonal' : 'text'">Excluir</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import api from '../../services/api';
 import { errorMessage } from '@/services/Clean';
 import { useTheme } from 'vuetify';
@@ -38,6 +43,7 @@ interface Pessoa {
 const deleteDialog = ref(false);
 const loading = ref(false);
 const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.current.value.dark);
 
 const props = defineProps<{
     selectedItems: Pessoa[];

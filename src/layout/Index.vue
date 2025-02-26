@@ -1,13 +1,14 @@
 <template>
     <v-layout class="rounded rounded-md">
 
-        <v-app-bar flat class="border-b">
+        <v-app-bar flat class="border-b px-1">
             <v-app-bar-nav-icon @click.stop="isDrawerOpen = !isDrawerOpen"></v-app-bar-nav-icon>
-            <v-toolbar-title>Sistema de Gerenciamento de Pessoas</v-toolbar-title>
+            <v-toolbar-title class="text-h6">Sistema de Gerenciamento de Pessoas</v-toolbar-title>
 
             <template #append>
                 <v-card-text class="mr-n7 mb-n4">
-                    <v-card-subtitle class="text-overline">{{ nameUser || 'Nome do usuário' }}</v-card-subtitle>
+                    <v-card-subtitle class="text-overline font-weight-medium">{{ nameUser || 'Usuário'
+                        }}</v-card-subtitle>
                 </v-card-text>
                 <Profile></Profile>
             </template>
@@ -16,12 +17,23 @@
 
         <v-navigation-drawer v-model="isDrawerOpen">
             <v-list>
-                <v-list-item to="/usuarios" title="Usuários" prepend-icon="mdi-account"></v-list-item>
-                <v-list-item to="/pessoas" title="Pessoas" prepend-icon="mdi-account-group"></v-list-item>
+                <v-list-item to="/usuarios">
+                    <v-container class="ma-n4">
+                        <v-icon class="mr-3" :color="isDarkTheme ? '#BB86FC' : 'blue-darken-1'">mdi-account</v-icon>
+                        <v-title>Usuários</v-title>
+                    </v-container>
+                </v-list-item>
+                <v-list-item to="/pessoas">
+                    <v-container class="ma-n4">
+                        <v-icon class="mr-3"
+                            :color="isDarkTheme ? '#BB86FC' : 'blue-darken-1'">mdi-account-group</v-icon>
+                        <v-title>Pessoas</v-title>
+                    </v-container>
+                </v-list-item>
 
                 <v-divider class="my-2"></v-divider>
 
-                <Sair></Sair>
+                <Sair/>
             </v-list>
 
             <template #append>

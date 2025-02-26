@@ -2,8 +2,11 @@
     <v-list-item title="Editar conta" prepend-icon="mdi-pencil" @click="openDialog()"></v-list-item>
 
     <v-dialog v-model="isConfirmed" max-width="700">
-        <v-card title="Editar conta" prepend-icon="mdi-pencil">
-
+        <v-card>
+            <v-container class="text-h6">
+                <v-icon class="mx-2 " color="blue">mdi-pencil</v-icon>
+                <v-title>Editar conta</v-title>
+            </v-container>
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}
             </v-alert>
@@ -31,7 +34,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="red" @click="isConfirmed = false">Cancelar</v-btn>
-                <v-btn color="green" @click="confirmAction" :variant="isDarkTheme ? 'flat' : 'tonal'">Editar</v-btn>
+                <v-btn color="green" @click="confirmAction" :variant="isDarkTheme ? 'tonal' : 'outlined'">Editar</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

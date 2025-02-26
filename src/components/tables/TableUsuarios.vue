@@ -1,23 +1,26 @@
 <template>
     <v-container>
-        <v-card class="mx-10">
+        <v-card class="mx-10 rounded-lg">
             <div class="pa-4">
                 <v-table height="500px" fixed-header>
                     <thead class="text-button">
                         <tr>
-                            <th class="text-left">Nomes</th>
-                            <th class="text-left">Emails</th>
-                            <th class="text-left">CPFs</th>
+                            <th class="text-left pl-7">Nomes</th>
+                            <th class="text-left pl-7">Emails</th>
+                            <th class="text-center">CPFs</th>
                         </tr>
                     </thead>
                     <tbody class="text-body-2">
                         <tr v-if="displayedUsuarios.length === 0 && !isLoading">
                             <td colspan="3" class="text-center">Nenhuma pessoa cadastrada</td>
                         </tr>
-                        <tr v-for="usuario in displayedUsuarios" :key="usuario.email">
-                            <td>{{ usuario.name ?? tableMessage }}</td>
-                            <td>{{ usuario.email ?? tableMessage }}</td>
-                            <td>{{ usuario.cpf ?? tableMessage }}</td>
+                        <tr v-for="usuario in displayedUsuarios" :key="usuario.email" class="table-row">
+                            <td class="d-flex align-center">
+                                <v-icon class="mr-2 icon-color">mdi-account</v-icon>
+                                {{ usuario.name ?? tableMessage }}
+                            </td>
+                            <td class="emailRow">{{ usuario.email ?? tableMessage }}</td>
+                            <td class="text-center">{{ usuario.cpf ?? tableMessage }}</td>
                         </tr>
                     </tbody>
                 </v-table>
@@ -30,6 +33,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue';
 import api from '@/services/api';
+import { useTheme } from 'vuetify';
 
 interface Usuario {
     name?: string;
@@ -37,6 +41,7 @@ interface Usuario {
     cpf?: string;
 }
 
+const theme = useTheme();
 const usuarios = ref<Usuario[]>([]);
 const displayedUsuarios = ref<Usuario[]>([]);
 const itemsPerPage = 5;
@@ -94,6 +99,28 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.emailRow {
+    margin-left: auto;
+    margin-right: auto;
+    width: 6em
+}
+
+.table-row {
+    transition: background 0.2s ease-in-out;
+}
+
+.table-row:hover {
+    background-color: v-bind('theme.global.current.value.dark ? "#333" : "#F0F0F0"');
+}
+
+tbody tr:nth-child(odd) {
+    background-color: v-bind('theme.global.current.value.dark ? "#282828" : "#FAFAFA"');
+}
+
+.icon-color {
+    color: v-bind('theme.global.current.value.dark ? "#BB86FC" : "#1976D2"');
+}
+
 .sentinela {
     height: 50px;
 }

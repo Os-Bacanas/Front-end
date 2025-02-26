@@ -3,7 +3,11 @@
         class="text-red-accent-3"></v-list-item>
 
     <v-dialog v-model="isConfirmed" max-width="400">
-        <v-card title="Deseja deletar a conta?" prepend-icon="mdi-close">
+        <v-card>
+            <v-container class="text-h6">
+                <v-icon class="mx-2 " color="red">mdi-close</v-icon>
+                <v-title>Deseja deletar a conta?</v-title>
+            </v-container>
             <v-card-subtitle>Impossível recuperar os dados depois.</v-card-subtitle>
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
@@ -14,20 +18,21 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
+                <v-btn color="red" @click="isConfirmed = false" variant="outlined">Não</v-btn>
                 <v-btn color="green" @click="confirmAction">Sim</v-btn>
-                <v-btn color="red" @click="isConfirmed = false" variant="flat">Não</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/services/api';
 import { errorMessage } from '@/services/Clean';
 import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
+import { useTheme } from 'vuetify';
 
 const router = useRouter();
 const isConfirmed = ref(false);

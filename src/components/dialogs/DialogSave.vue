@@ -8,7 +8,11 @@
             </v-card-actions>
         </template>
 
-        <v-card prepend-icon="mdi-account" title="Salvar Pessoa">
+        <v-card>
+            <v-container class="text-h6">
+                <v-icon class="mx-2 " :color="isDarkTheme ? 'green-lighten-1' : 'green-darken-2'">mdi-account</v-icon>
+                <v-title>Salvar Pessoa</v-title>
+            </v-container>
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}
@@ -33,7 +37,7 @@
                             :rules="[required, telefoneIsValid]"></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-combobox label="Descrição do Telefone*"
+                        <v-combobox label="Descrição do Telefone"
                             :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
                             v-model="formBase.descricao"></v-combobox>
                     </v-col>
@@ -49,10 +53,11 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <v-btn text="Cancelar" variant="plain" @click="dialog = false"></v-btn>
+                <v-btn text="Cancelar" variant="plain" @click="dialog = false" color="red"></v-btn>
 
-                <v-btn color="primary" text="Salvar" variant="tonal" @click="postLogin"
-                    :disabled="!formBase.nome || !formBase.email || loading">
+                <v-btn text="Salvar" :variant="isDarkTheme ? 'flat' : 'tonal'" @click="postSave"
+                    :disabled="!formBase.nome || !formBase.email || loading"
+                    :color="isDarkTheme ? 'green-lighten-1' : 'green-darken-2'">
                 </v-btn>
             </v-card-actions>
         </v-card>
@@ -78,7 +83,7 @@ function openDialog() {
     dialog.value = true;
 }
 
-async function postLogin() {
+async function postSave() {
     loading.value = true;
     try {
         if (!valid.value.email || !valid.value.cpf || !valid.value.telefone) {

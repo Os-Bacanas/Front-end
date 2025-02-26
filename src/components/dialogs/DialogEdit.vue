@@ -1,12 +1,16 @@
 <template>
     <v-dialog v-model="dialog" max-width="700">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon color="primary" variant="text" v-bind="activatorProps" @click="resetForm">
+            <v-btn icon class="icon-color" variant="text" v-bind="activatorProps" @click="resetForm">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn>
         </template>
 
-        <v-card prepend-icon="mdi-pencil" title="Editar Pessoa">
+        <v-card>
+            <v-container class="text-h6">
+                <v-icon class="mx-2 " :color="isDarkTheme ? '#BB86FC' : '#1976D2'">mdi-pencil</v-icon>
+                <v-title>Editar Pessoa</v-title>
+            </v-container>
 
             <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
                 {{ errorMessage }}
@@ -32,10 +36,9 @@
                             :rules="[required, telefoneIsValid]"></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-combobox label="Descrição do Telefone*"
+                        <v-combobox label="Descrição do Telefone"
                             :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
-                            v-model="formBase.descricao" :rules="[required]" item-value="descricao"
-                            item-text="descricao">
+                            v-model="formBase.descricao" item-value="descricao" item-text="descricao">
                         </v-combobox>
                     </v-col>
                 </v-row>
@@ -49,9 +52,10 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <v-btn text="Cancelar" variant="plain" @click="dialog = false"></v-btn>
+                <v-btn text="Cancelar" variant="plain" @click="dialog = false" color="red"></v-btn>
 
-                <v-btn color="primary" text="Editar" variant="tonal" @click="putEdit"
+                <v-btn :color="isDarkTheme ? '#BB86FC' : '#1976D2'" text="Editar"
+                    :variant="isDarkTheme ? 'flat' : 'tonal'" @click="putEdit"
                     :disabled="!formBase.nome || !formBase.email || !formBase.telefone || loading"></v-btn>
             </v-card-actions>
         </v-card>
@@ -59,12 +63,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { required, emailIsValid, cpfIsValid, telefoneIsValid } from "../../services/Validacao";
 import api from "../../services/api";
 import { valid, formBase } from '../../services/Campos';
 import { clean, errorMessage } from '@/services/Clean';
+import { useTheme } from 'vuetify';
 
+const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.current.value.dark);
 const dialog = ref(false);
 const loading = ref(false);
 const props = defineProps<{
@@ -129,3 +136,9 @@ async function putEdit() {
     }
 };
 </script>
+
+<style scoped>
+.icon-color {
+    color: v-bind('theme.global.current.value.dark ? "#BB86FC" : "#1976D2"');
+}
+</style>

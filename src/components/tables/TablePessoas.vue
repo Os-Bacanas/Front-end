@@ -26,7 +26,7 @@
                         <tr v-if="displayedPessoas.length === 0">
                             <td colspan="6" class="text-center">Nenhuma pessoa cadastrada</td>
                         </tr>
-                        <tr v-for="pessoa in displayedPessoas" :key="pessoa.email">
+                        <tr v-for="pessoa in displayedPessoas" :key="pessoa.email" class="table-row">
                             <td>
                                 <v-checkbox class="d-flex align-center" v-model="selectedItems"
                                     :value="pessoa"></v-checkbox>
@@ -81,6 +81,7 @@ import DialogEdit from '../dialogs/DialogEdit.vue';
 import DialogSave from '../dialogs/DialogSave.vue';
 import DialogDeleteSelect from '../dialogs/DialogDeleteSelect.vue';
 import api from '@/services/api';
+import { useTheme } from 'vuetify';
 
 interface Pessoa {
     id?: string;
@@ -95,6 +96,7 @@ interface Pessoa {
     }[];
 }
 
+const theme = useTheme();
 const pessoas = ref<Pessoa[]>([]);
 const displayedPessoas = ref<Pessoa[]>([]);
 const selectedItems = ref<Pessoa[]>([]);
@@ -179,5 +181,21 @@ onUnmounted(() => {
 <style scoped>
 .no-width {
     width: 0px !important;
+}
+
+.table-row {
+    transition: background 0.2s ease-in-out;
+}
+
+.table-row:hover {
+    background-color: v-bind('theme.global.current.value.dark ? "#333" : "#F0F0F0"');
+}
+
+tbody tr:nth-child(odd) {
+    background-color: v-bind('theme.global.current.value.dark ? "#282828" : "#FAFAFA"');
+}
+
+.sentinela {
+    height: 50px;
 }
 </style>
