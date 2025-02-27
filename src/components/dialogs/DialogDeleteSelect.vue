@@ -1,10 +1,12 @@
 <template>
     <v-dialog v-model="deleteDialog" max-width="500">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn color="red" prepend-icon="mdi-close" :disabled="selectedItems.length === 0" v-bind="activatorProps"
-                @click="openDialog" variant="flat">
-                Deletar
-            </v-btn>
+            <transition name="fade">
+                <v-btn color="red" prepend-icon="mdi-close" v-show="selectedItems.length !== 0" v-bind="activatorProps"
+                    @click="openDialog" variant="flat">
+                    Deletar
+                </v-btn>
+            </transition>
         </template>
         <v-card>
             <v-container class="text-h6">
@@ -76,3 +78,18 @@ async function deleteSelected() {
     }
 }
 </script>
+
+<style scoped>
+.fade-enter-active {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-to {
+    opacity: 1;
+}
+</style>
