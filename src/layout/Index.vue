@@ -8,7 +8,7 @@
             <template #append>
                 <v-card-text class="mr-n7 mb-n4">
                     <v-card-subtitle class="text-overline font-weight-medium">{{ nameUser || 'Usuário'
-                        }}</v-card-subtitle>
+                    }}</v-card-subtitle>
                 </v-card-text>
                 <Profile></Profile>
             </template>
@@ -33,7 +33,7 @@
 
                 <v-divider class="my-2"></v-divider>
 
-                <Sair/>
+                <Sair />
             </v-list>
 
             <template #append>

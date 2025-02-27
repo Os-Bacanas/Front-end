@@ -27,11 +27,8 @@
 <script lang="ts" setup>
 import router from '@/router';
 import { ref } from 'vue';
-import { useTheme } from 'vuetify';
 
 const isConfirmed = ref(false);
-const theme = useTheme();
-const isDarkTheme = ref(false);
 
 function confirmAction() {
     isConfirmed.value = false;

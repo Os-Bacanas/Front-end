@@ -7,6 +7,7 @@
                     <v-spacer />
                     <DialogSave />
                 </v-card-title>
+
                 <v-table height="500px" fixed-header>
                     <thead class="text-button">
                         <tr>
@@ -22,11 +23,13 @@
                             <th class="no-width text-center">Ações</th>
                         </tr>
                     </thead>
+
                     <tbody class="text-body-2">
                         <tr v-if="displayedPessoas.length === 0">
                             <td colspan="6" class="text-center">Nenhuma pessoa cadastrada</td>
                         </tr>
-                        <tr v-for="pessoa in displayedPessoas" :key="pessoa.email" class="table-row">
+
+                        <tr v-for="pessoa in displayedPessoas" :key="pessoa.email" class="table-row ">
                             <td>
                                 <v-checkbox class="d-flex align-center" v-model="selectedItems"
                                     :value="pessoa"></v-checkbox>
@@ -35,10 +38,41 @@
                             <td>{{ pessoa.email ?? tableMessage }}</td>
                             <td>{{ pessoa.cpf ?? tableMessage }}</td>
                             <td>
-                                <div v-if="pessoa.phones && pessoa.phones.length">
-                                    <div v-for="(phone, index) in pessoa.phones" :key="index">
-                                        {{ phone.number ?? tableMessage }}
-                                    </div>
+                                <div v-if="pessoa.phones && pessoa.phones.length" class="d-flex align-center">
+                                    {{ pessoa.phones[0].number ?? tableMessage }}
+
+                                    <v-menu open-on-hover transition="slide-y-transition" height="200" width="270">
+                                        <template v-slot:activator="{ props }">
+                                            <v-icon class="transition-icon" v-bind="props" size="x-large">
+                                                mdi-chevron-down
+                                            </v-icon>
+                                        </template>
+
+                                        <v-list class="menuColor">
+                                            <v-container class="d-flex ma-n3">
+                                                <v-list-subheader class="text-button font-weight-bold "
+                                                    :color="isDarkTheme ? 'white' : 'black'">Telefones</v-list-subheader>
+
+                                                <v-spacer></v-spacer>
+
+                                                <v-list-subheader class="text-button font-weight-bold mr-n5"
+                                                    :color="isDarkTheme ? 'white' : 'black'">Descrições</v-list-subheader>
+
+                                            </v-container>
+                                            <v-divider></v-divider>
+                                            <v-list-item v-for="(phone, index) in pessoa.phones" :key="index">
+                                                <v-list-item-title class="text-button">
+                                                    <v-chip class="mr-2"
+                                                        :color="isDarkTheme ? 'deep-purple-lighten-4' : 'blue'">
+                                                        {{ phone.number }}
+                                                    </v-chip>
+                                                    <v-spacer></v-spacer>
+                                                    {{ phone.typePhoneDTO?.description ?? tableMessage }}
+                                                </v-list-item-title>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
+
                                 </div>
                                 <div v-else>
                                     {{ tableMessage }}
@@ -46,9 +80,7 @@
                             </td>
                             <td>
                                 <div v-if="pessoa.phones && pessoa.phones.length">
-                                    <div v-for="(phone, index) in pessoa.phones" :key="index">
-                                        {{ phone.typePhoneDTO?.description ?? tableMessage }}
-                                    </div>
+                                    {{ pessoa.phones[0].typePhoneDTO?.description ?? tableMessage }}
                                 </div>
                                 <div v-else>
                                     {{ tableMessage }}
@@ -76,27 +108,29 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, watchEffect, onMounted, onUnmounted, nextTick, computed } from 'vue';
 import DialogEdit from '../dialogs/DialogEdit.vue';
 import DialogSave from '../dialogs/DialogSave.vue';
 import DialogDeleteSelect from '../dialogs/DialogDeleteSelect.vue';
 import api from '@/services/api';
 import { useTheme } from 'vuetify';
 
+
 interface Pessoa {
     id?: string;
     name?: string;
     email: string;
     cpf?: string;
-    phones?: {
+    phones: {
         number: string;
         typePhoneDTO?: {
             description: string;
-        }
+        };
     }[];
 }
 
 const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.current.value.dark);
 const pessoas = ref<Pessoa[]>([]);
 const displayedPessoas = ref<Pessoa[]>([]);
 const selectedItems = ref<Pessoa[]>([]);
@@ -106,6 +140,7 @@ const displayedCount = ref(itemsPerPage);
 const isLoading = ref(false);
 const sentinela = ref(null);
 const tableMessage = 'Não informado';
+
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !isLoading.value) {
         loadMorePessoas();
@@ -134,7 +169,7 @@ async function fetchPessoas() {
     } finally {
         isLoading.value = false;
     }
-}
+};
 
 function toggleSelectAll() {
     if (selectAll.value) {
@@ -142,27 +177,23 @@ function toggleSelectAll() {
     } else {
         selectedItems.value = [];
     }
-}
+};
 
 function handleDelete(deletedEmails: any) {
     pessoas.value = pessoas.value.filter(pessoa => !deletedEmails.includes(pessoa.email));
     selectedItems.value = [];
     selectAll.value = false;
-}
+};
 
 function loadMorePessoas() {
     if (displayedCount.value < pessoas.value.length) {
-        displayedCount.value = Math.min(displayedCount.value + itemsPerPage, pessoas.value.length)
+        displayedCount.value = Math.min(displayedCount.value + itemsPerPage, pessoas.value.length);
     }
 };
 
 watchEffect(() => {
     displayedPessoas.value = pessoas.value.slice(0, displayedCount.value);
-    if (selectedItems.value.length === displayedPessoas.value.length && displayedPessoas.value.length > 0) {
-        selectAll.value = true;
-    } else {
-        selectAll.value = false
-    }
+    selectAll.value = selectedItems.value.length === displayedPessoas.value.length && displayedPessoas.value.length > 0;
 });
 
 onMounted(async () => {
@@ -197,5 +228,30 @@ tbody tr:nth-child(odd) {
 
 .sentinela {
     height: 50px;
+}
+
+.transition-icon {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.transition-icon:hover {
+    transform: rotate(180deg);
+    color: #FF4081;
+}
+
+.v-list-item-title {
+    display: flex;
+    align-items: center;
+}
+
+.v-chip {
+    margin-right: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.v-divider {
+    margin: 4px 0;
+    background-color: #1976D2;
 }
 </style>

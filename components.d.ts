@@ -14,6 +14,7 @@ declare module 'vue' {
     Editar: typeof import('./src/components/usuario/Editar.vue')['default']
     FormCadastro: typeof import('./src/components/forms/FormCadastro.vue')['default']
     FormLogin: typeof import('./src/components/forms/FormLogin.vue')['default']
+    MenuPhones: typeof import('./src/components/MenuPhones.vue')['default']
     Profile: typeof import('./src/components/usuario/Profile.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
