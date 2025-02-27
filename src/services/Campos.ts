@@ -5,8 +5,7 @@ export const formBase = ref({
   nome: "",
   cpf: "",
   email: "",
-  telefone: "",
-  descricao: "",
+  phones: [{ number: "", typePhoneDTO: { description: "" } }], 
 });
 
 export const formComSenha = ref({

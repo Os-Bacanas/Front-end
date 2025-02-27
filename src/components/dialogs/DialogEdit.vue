@@ -1,62 +1,73 @@
 <template>
     <v-dialog v-model="dialog" max-width="700">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="icon-color" variant="text" v-bind="activatorProps" @click="resetForm">
+            <v-btn icon class="icon-color" variant="text" v-bind="activatorProps" @click="openDialog">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn>
         </template>
 
-        <v-card>
-            <v-container class="text-h6">
-                <v-icon class="mx-2 " :color="isDarkTheme ? '#BB86FC' : '#1976D2'">mdi-pencil</v-icon>
-                <v-title>Editar Pessoa</v-title>
+        <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
+            <v-container class="d-flex align-center text-h6">
+                <v-icon class="mr-2" :color="isDarkTheme ? '#BB86FC' : '#1976D2'">mdi-pencil</v-icon>
+                <span>Editar Pessoa</span>
             </v-container>
 
-            <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
+            <v-alert v-if="errorMessage" type="error" class="mb-3" :variant="isDarkTheme ? 'elevated' : 'tonal'">
                 {{ errorMessage }}
             </v-alert>
 
             <v-card-text>
                 <v-row dense>
-                    <v-col cols="12" md="4" sm="6">
+                    <v-col cols="12" md="4">
                         <v-text-field label="Nome*" v-model="formBase.nome" :rules="[required]"></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" md="4" sm="6">
+                    <v-col cols="12" md="4">
                         <v-text-field label="Email*" v-model="formBase.email"
                             :rules="[required, emailIsValid]"></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" md="4" sm="6">
+                    <v-col cols="12" md="4">
                         <v-text-field label="CPF" v-model="formBase.cpf" :rules="[cpfIsValid]"></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="Telefone*" v-model="formBase.telefone"
-                            :rules="[required, telefoneIsValid]"></v-text-field>
-                    </v-col>
-                    <v-col>
-                        <v-combobox label="Descrição do Telefone"
-                            :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
-                            v-model="formBase.descricao" item-value="descricao" item-text="descricao">
-                        </v-combobox>
-                    </v-col>
-                </v-row>
+                    <v-container class="py-0 mt-3">
+                        <v-row v-for="(phone, index) in formBase.phones" :key="index" class="align-center pa-0">
+                            <v-col cols="12" md="6" class="py-1">
+                                <v-text-field :label="`Telefone ${index + 1}*`" v-model="phone.number"
+                                    :rules="[required, telefoneIsValid]" placeholder="Digite o telefone" />
+                            </v-col>
 
-                <small class="text-caption text-medium-emphasis">*Preencha os dados corretamente</small>
+                            <v-col cols="12" md="6" class="py-1">
+                                <v-combobox :label="`Descrição ${index + 1}`" v-model="phone.typePhoneDTO.description"
+                                    :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
+                                    placeholder="Selecione a descrição" />
+                            </v-col>
+
+                            <v-col cols="12" class="py-1">
+                                <v-divider class="divider"></v-divider>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-row>
+                <v-container class="mb-n10">
+                    <small class="text-caption text-medium-emphasis">*Preencha os dados corretamente</small>
+                </v-container>
             </v-card-text>
 
-            <v-divider></v-divider>
-            <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
+            <v-progress-linear v-if="loading" indeterminate
+                :color="isDarkTheme ? '#BB86FC' : 'primary'"></v-progress-linear>
 
-            <v-card-actions>
+            <v-card-actions class="mt-2">
+                <v-btn @click="addPhone" color="blue" variant="tonal" size="small">Adicionar Telefone</v-btn>
+
                 <v-spacer></v-spacer>
 
-                <v-btn text="Cancelar" variant="plain" @click="dialog = false" color="red"></v-btn>
+                <v-btn text="Cancelar" variant="plain" @click="cancelEdit" color="red"></v-btn>
 
                 <v-btn :color="isDarkTheme ? '#BB86FC' : '#1976D2'" text="Editar"
                     :variant="isDarkTheme ? 'flat' : 'tonal'" @click="putEdit"
-                    :disabled="!formBase.nome || !formBase.email || !formBase.telefone || loading"></v-btn>
+                    :disabled="!formBase.nome || !formBase.email || formBase.phones.some(phone => !phone.number) || loading" />
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -80,51 +91,49 @@ const props = defineProps<{
         nome: string;
         email: string;
         cpf: string;
-        telefone: string;
-        descricao: string;
+        phones: Array<{ number: string, typePhoneDTO: { description: string } }>;
     };
 }>();
 
-watch(dialog, (newVal) => {
-    if (newVal && props.pessoa) {
-        formBase.value = Object.assign({}, props.pessoa);
-    }
-});
+function openDialog() {
+    resetForm();
+    dialog.value = true;
+};
 
 function resetForm() {
     errorMessage.value = '';
     if (props.pessoa) {
-        formBase.value = Object.assign({}, props.pessoa);
+        formBase.value = JSON.parse(JSON.stringify(props.pessoa));
     } else {
         clean(formBase);
     }
-}
+};
+
+function cancelEdit() {
+    dialog.value = false;
+    resetForm();
+};
 
 async function putEdit() {
     errorMessage.value = '';
     if (!props.pessoa) {
         return dialog.value = false;
     }
-
     loading.value = true;
-
     try {
         if (!valid.value.email || !valid.value.telefone || !valid.value.cpf) {
             return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
         }
+        const phonesData = formBase.value.phones.map(phone => ({
+            number: phone.number,
+            typePhoneDTO: { description: phone.typePhoneDTO?.description }
+        }));
         await api.put('/pessoas', {
             id: formBase.value.id,
             name: formBase.value.nome,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
-            phones: [
-                {
-                    number: formBase.value.telefone,
-                    typePhoneDTO: {
-                        description: formBase.value.descricao
-                    }
-                }
-            ]
+            phones: phonesData
         });
         dialog.value = false;
         window.location.reload();
@@ -135,10 +144,26 @@ async function putEdit() {
         loading.value = false;
     }
 };
+
+function addPhone() {
+    const newPhone = { number: '', typePhoneDTO: { description: '' } };
+    formBase.value.phones.push(newPhone);
+}
+
+watch(dialog, (newVal) => {
+    if (!newVal) {
+        resetForm();
+    }
+});
 </script>
 
 <style scoped>
 .icon-color {
     color: v-bind('theme.global.current.value.dark ? "#BB86FC" : "#1976D2"');
+}
+
+.divider {
+    opacity: 0.2;
+    background-color: v-bind('theme.global.current.value.dark ? "#FFFFFF" : "#000000"');
 }
 </style>

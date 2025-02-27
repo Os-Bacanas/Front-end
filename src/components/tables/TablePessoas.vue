@@ -41,7 +41,7 @@
                                 <div v-if="pessoa.phones && pessoa.phones.length" class="d-flex align-center">
                                     {{ pessoa.phones[0].number ?? tableMessage }}
 
-                                    <v-menu open-on-hover transition="slide-y-transition" height="200" width="270">
+                                    <v-menu open-on-hover transition="slide-y-transition" max-height="200" width="270">
                                         <template v-slot:activator="{ props }">
                                             <v-icon class="transition-icon" v-bind="props" size="x-large">
                                                 mdi-chevron-down
@@ -50,24 +50,26 @@
 
                                         <v-list class="menuColor">
                                             <v-container class="d-flex ma-n3">
-                                                <v-list-subheader class="text-button font-weight-bold "
+                                                <v-list-subheader class="text-button font-weight-bold"
                                                     :color="isDarkTheme ? 'white' : 'black'">Telefones</v-list-subheader>
 
                                                 <v-spacer></v-spacer>
 
                                                 <v-list-subheader class="text-button font-weight-bold mr-n5"
                                                     :color="isDarkTheme ? 'white' : 'black'">Descrições</v-list-subheader>
-
                                             </v-container>
                                             <v-divider></v-divider>
                                             <v-list-item v-for="(phone, index) in pessoa.phones" :key="index">
-                                                <v-list-item-title class="text-button">
+                                                <v-list-item-title class="text-caption d-flex align-center">
                                                     <v-chip class="mr-2"
                                                         :color="isDarkTheme ? 'deep-purple-lighten-4' : 'blue'">
                                                         {{ phone.number }}
                                                     </v-chip>
                                                     <v-spacer></v-spacer>
-                                                    {{ phone.typePhoneDTO?.description ?? tableMessage }}
+                                                    <span class="text-caption"
+                                                        style="font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                        {{ phone.typePhoneDTO?.description ?? tableMessage }}
+                                                    </span>
                                                 </v-list-item-title>
                                             </v-list-item>
                                         </v-list>
@@ -93,8 +95,7 @@
                                         nome: pessoa.name || '',
                                         email: pessoa.email || '',
                                         cpf: pessoa.cpf || '',
-                                        telefone: pessoa.phones?.[0]?.number || '',
-                                        descricao: pessoa.phones?.[0]?.typePhoneDTO?.description || ''
+                                        phones: pessoa.phones || []
                                     }" />
                                 </v-btn-group>
                             </td>
@@ -121,12 +122,14 @@ interface Pessoa {
     name?: string;
     email: string;
     cpf?: string;
-    phones: {
-        number: string;
-        typePhoneDTO?: {
-            description: string;
-        };
-    }[];
+    phones: Phone[];
+}
+
+interface Phone {
+    number: string;
+    typePhoneDTO: {
+        description: string;
+    };
 }
 
 const theme = useTheme();

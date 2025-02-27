@@ -14,7 +14,7 @@
             <v-card-text class="mb-n5">Tem certeza que deseja excluir os {{ selectedItems.length }} itens
                 selecionados?</v-card-text>
 
-            <v-alert v-if="errorMessage" type="error" color="red-lighten-4" class="ma-4">
+            <v-alert v-if="errorMessage" type="error" class="mb-3 mx-3" :variant="isDarkTheme ? 'tonal' : 'elevated'">
                 {{ errorMessage }}
             </v-alert>
 
