@@ -2,7 +2,7 @@
     <v-dialog v-model="deleteDialog" max-width="500">
         <template v-slot:activator="{ props: activatorProps }">
             <transition name="fade">
-                <v-btn color="red" prepend-icon="mdi-close" v-show="selectedItems.length !== 0" v-bind="activatorProps"
+                <v-btn color="red" prepend-icon="mdi-close" v-show="selectedItems && selectedItems.length !== 0" v-bind="activatorProps"
                     @click="openDialog" variant="flat">
                     Deletar
                 </v-btn>
@@ -48,13 +48,7 @@ const loading = ref(false);
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
 
-const props = defineProps<{
-    selectedItems: Pessoa[];
-}>();
-
-const emit = defineEmits<{
-    (event: "deleted", deletedEmails: string[]): void;
-}>();
+const emit = defineEmits(["delete-success"]);
 
 function openDialog() {
     errorMessage.value = '';
@@ -68,16 +62,11 @@ async function deleteSelected() {
     try {
         const emailsToDelete = props.selectedItems.map((item: Pessoa) => item.email);
         await api.delete('/pessoas/deletar-emails', { data: emailsToDelete });
-        emit("deleted", emailsToDelete);
+        emit("delete-success");
         deleteDialog.value = false;
-        window.location.reload();
     } catch (error) {
         console.error("Erro ao deletar pessoas:", error);
-        if (error.response && error.response.data && error.response.data.message) {
-            errorMessage.value = error.response.data.message;
-        } else {
-            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
-        }
+        errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {
         loading.value = false;
     }

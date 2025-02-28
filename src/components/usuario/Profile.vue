@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import DeletarConta from './DeletarConta.vue';
 import Editar from './Editar.vue';
 import { jwtDecode } from 'jwt-decode';
@@ -43,14 +43,20 @@ const cpfUser = computed(() => usuario.value.cpf);
 
 let decodedToken: CustomJwtPayload | null = null;
 
-try {
+onMounted(() => {
     if (token) {
-        decodedToken = jwtDecode<CustomJwtPayload>(token);
+        try {
+            const decodedToken = jwtDecode<CustomJwtPayload>(token);
+            usuario.value = {
+                name: decodedToken?.name || "Nome do usuário",
+                email: decodedToken?.email || "Email do usuário",
+                cpf: decodedToken?.cpf || "CPF do usuário"
+            };
+        } catch (error) {
+            console.error("Erro ao decodificar o token:", error);
+        }
     }
-} catch (error) {
-    console.error("Erro ao decodificar o token:", error);
-}
-
+});
 const usuario = ref({
     name: decodedToken?.name || "Nome do usuário",
     email: decodedToken?.email || "Email do usuário",

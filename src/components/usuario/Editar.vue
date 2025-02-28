@@ -5,7 +5,7 @@
         <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
             <v-container class="text-h6">
                 <v-icon class="mx-2 " :color="isDarkTheme ? '#BB86FC' : '#1976D2'">mdi-pencil</v-icon>
-                <v-title>Editar conta</v-title>
+                <v-card-title>Editar conta</v-card-title>
             </v-container>
             <v-alert v-if="errorMessage" type="error" class="mb-3" :variant="isDarkTheme ? 'elevated' : 'tonal'">
                 {{ errorMessage }}
@@ -86,7 +86,9 @@ function loadUserData() {
         cpf.value = decodedToken.cpf;
     } catch (error) {
         console.error('Erro ao decodificar o token: ', error);
-        errorMessage.value = "Erro inesperado, tente mais tarde.";
+        setTimeout(() => {
+            router.replace('/login')
+        }, 2000);
     }
 }
 
@@ -94,9 +96,7 @@ async function confirmAction() {
     loading.value = true;
     errorMessage.value = '';
 
-    if (!valid.value.cpf) {
-        console.log(valid.value.email);
-        console.log(valid.value.cpf);
+    if (!valid.value.cpf || !valid.value.email) {
         loading.value = false;
         return errorMessage.value = "Erro ao editar. Verifique suas credenciais.";
     }
@@ -115,11 +115,7 @@ async function confirmAction() {
         window.location.reload();
     } catch (error) {
         console.error("Erro ao fazer o PUT:", error);
-        if (error.response && error.response.data && error.response.data.message) {
-            errorMessage.value = error.response.data.message;
-        } else {
-            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
-        }
+        errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {
         loading.value = false;
     }

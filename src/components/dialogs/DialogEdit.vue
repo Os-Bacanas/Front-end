@@ -106,16 +106,19 @@ function openDialog() {
 function resetForm() {
     errorMessage.value = '';
     if (props.pessoa) {
-        formBase.value = JSON.parse(JSON.stringify(props.pessoa));
+        Object.assign(formBase.value, props.pessoa);
     } else {
         clean(formBase);
     }
-};
+}
+
 
 function cancelEdit() {
     dialog.value = false;
     resetForm();
 };
+
+const emit = defineEmits(["edit-success"]);
 
 async function putEdit() {
     errorMessage.value = '';
@@ -139,14 +142,10 @@ async function putEdit() {
             phones: phonesData
         });
         dialog.value = false;
-        window.location.reload();
+        emit("edit-success");
     } catch (error) {
         console.error("Erro ao editar:", error);
-        if (error.response && error.response.data && error.response.data.message) {
-            errorMessage.value = error.response.data.message;
-        } else {
-            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
-        }
+        errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {
         loading.value = false;
     }

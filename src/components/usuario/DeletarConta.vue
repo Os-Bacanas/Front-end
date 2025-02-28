@@ -6,7 +6,7 @@
         <v-card>
             <v-container class="text-h6">
                 <v-icon class="mx-2 " color="red">mdi-close</v-icon>
-                <v-title>Deseja deletar a conta?</v-title>
+                <v-card-title>Deseja deletar a conta?</v-card-title>
             </v-container>
             <v-card-subtitle>Impossível recuperar os dados depois.</v-card-subtitle>
 
@@ -63,11 +63,7 @@ async function confirmAction() {
         isConfirmed.value = false;
     } catch (error) {
         console.error('Erro ao deletar usuario: ', error)
-        if (error.response && error.response.data && error.response.data.message) {
-            errorMessage.value = error.response.data.message;
-        } else {
-            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
-        }
+        errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {
         loading.value = false;
     }

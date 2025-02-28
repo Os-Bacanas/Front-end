@@ -3,9 +3,10 @@
         <v-card class="mx-10">
             <div class="pa-4">
                 <v-card-title class="d-flex align-center pa-4">
-                    <DialogDeleteSelect :selectedItems="selectedItems" @deleted="handleDelete" />
+                    <DialogDeleteSelect :selectedItems="selectedItems" @deleted="handleDelete"
+                        @delete-success="fetchPessoas" />
                     <v-spacer />
-                    <DialogSave />
+                    <DialogSave @save-success="fetchPessoas" />
                 </v-card-title>
 
                 <v-table height="500px" fixed-header>
@@ -96,15 +97,7 @@
                                 </div>
                             </td>
                             <td class="no-width">
-                                <v-btn-group>
-                                    <DialogEdit :pessoa="{
-                                        id: pessoa.id || '',
-                                        nome: pessoa.name || '',
-                                        email: pessoa.email || '',
-                                        cpf: pessoa.cpf || '',
-                                        phones: pessoa.phones || []
-                                    }" />
-                                </v-btn-group>
+                                <DialogEdit :pessoa="pessoa" @edit-success="fetchPessoas" />
                             </td>
                         </tr>
                     </tbody>
@@ -151,10 +144,16 @@ const isLoading = ref(false);
 const sentinela = ref(null);
 const tableMessage = 'Não informado';
 const menuAberto = ref<string | null>(null);
+const debounceTimeout = ref<any>(null);
 
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !isLoading.value) {
-        loadMorePessoas();
+        if (debounceTimeout.value) {
+            clearTimeout(debounceTimeout.value);
+        }
+        debounceTimeout.value = setTimeout(() => {
+            loadMorePessoas();
+        }, 300);
     }
 }, {
     rootMargin: '50px',
@@ -189,9 +188,9 @@ async function fetchPessoas() {
 function toggleSelectAll() {
     if (selectAll.value) {
         selectedItems.value = [...displayedPessoas.value];
-    } else {
-        selectedItems.value = [];
+        return;
     }
+    selectedItems.value = [];
 };
 
 function handleDelete(deletedEmails: any) {

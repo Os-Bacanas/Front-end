@@ -67,7 +67,7 @@ const isDrawerOpen = ref(true);
 const theme = useTheme();
 const isDarkTheme = ref(false);
 
-let nameUser = "";
+let nameUser = ref('');
 
 function mudarTema() {
     isDarkTheme.value = !isDarkTheme.value;
@@ -92,7 +92,7 @@ onMounted(() => {
 
     try {
         const decodedToken = jwtDecode<CustomJwtPayload>(savedToken);
-        nameUser = decodedToken.name;
+        nameUser.value = decodedToken.name;
     } catch (error) {
         console.error("Erro ao decodificar o token:", error);
         localStorage.removeItem("accessToken");

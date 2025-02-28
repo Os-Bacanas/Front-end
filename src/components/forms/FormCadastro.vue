@@ -59,7 +59,7 @@ import { required, emailIsValid, cpfIsValid, passwordIsValid, confirmPasswordIsV
 import { formComSenha, valid } from '../../services/Campos'
 import { visible, toggleVisibility } from "@/services/visiblePassword";
 import { useRouter } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { clean, errorMessage } from "@/services/Clean";
 import api from "../../services/api";
 
@@ -80,16 +80,7 @@ async function postCadastro() {
         router.push("/login");
     } catch (error) {
         console.error("Erro ao cadastrar:", error);
-        if (error.response && error.response.data && error.response.data.message) {
-            errorMessage.value = error.response.data.message;
-        } else {
-            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
-        }
-    } finally {
-        setTimeout(() => {
-            errorMessage.value = "";
-        }, 5000);
-
+        errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     }
 };
 
@@ -97,4 +88,8 @@ onMounted(() => {
     errorMessage.value = '';
     clean(formComSenha);
 });
+
+watch(formComSenha, () => {
+    errorMessage.value = "";
+}, { deep: true });
 </script>

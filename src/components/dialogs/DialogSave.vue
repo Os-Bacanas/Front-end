@@ -66,7 +66,7 @@
                 <v-btn text="Cancelar" variant="plain" @click="dialog = false" color="red"></v-btn>
 
                 <v-btn text="Salvar" :variant="isDarkTheme ? 'flat' : 'tonal'" @click="postSave"
-                    :disabled="!formBase.nome || !formBase.email || loading"
+                    :disabled="!formBase.value.nome || !formBase.value.email || loading"
                     :color="isDarkTheme ? 'green-lighten-1' : 'green-darken-2'">
                 </v-btn>
             </v-card-actions>
@@ -112,6 +112,8 @@ function openDialog() {
     });
 }
 
+const emit = defineEmits(["save-success"]);
+
 async function postSave() {
     loading.value = true;
     try {
@@ -121,8 +123,8 @@ async function postSave() {
         const phonesData = items.value.map(phone => ({
             number: phone.number,
             typePhoneDTO: {
-                description: phone.typePhoneDTO?.description
-            }
+                description: phone.typePhoneDTO?.description || '',
+            },
         }));
         await api.post("/pessoas", {
             name: formBase.value.nome,
@@ -132,14 +134,10 @@ async function postSave() {
         });
         dialog.value = false;
         clean(formBase);
-        window.location.reload();
+        emit("save-success");
     } catch (error) {
         console.error("Erro ao salvar:", error);
-        if (error.response && error.response.data && error.response.data.message) {
-            errorMessage.value = error.response.data.message;
-        } else {
-            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
-        }
+        errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {
         loading.value = false;
     }

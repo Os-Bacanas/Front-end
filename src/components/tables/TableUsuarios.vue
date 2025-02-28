@@ -50,10 +50,16 @@ const displayedCount = ref(itemsPerPage);
 const isLoading = ref(false);
 const sentinela = ref<HTMLElement | null>(null);
 const tableMessage = 'Não informado';
+const debounceTimeout = ref<any>(null);
 
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !isLoading.value) {
-        loadMoreUsuarios();
+        if (debounceTimeout.value) {
+            clearTimeout(debounceTimeout.value);
+        }
+        debounceTimeout.value = setTimeout(() => {
+            loadMoreUsuarios();
+        }, 300);
     }
 }, {
     rootMargin: '50px',

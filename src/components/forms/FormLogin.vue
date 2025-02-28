@@ -37,7 +37,7 @@
 import { required, emailIsValid } from "../../services/Validacao";
 import { formComSenha, valid } from '../../services/Campos';
 import { visible, toggleVisibility } from "@/services/visiblePassword";
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from "vue-router";
 import { jwtDecode } from "jwt-decode";
 import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
@@ -61,16 +61,9 @@ async function postLogin() {
         router.push("/usuarios");
     } catch (error) {
         console.error("Erro ao fazer o login:", error);
-        if (error.response && error.response.data && error.response.data.message) {
-            errorMessage.value = error.response.data.message;
-        } else {
-            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
-        }
+        errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {
         isSubmitting.value = false;
-        setTimeout(() => {
-            errorMessage.value = "";
-        }, 5000);
     }
 }
 
@@ -86,8 +79,12 @@ onMounted(() => {
             }
         } catch (error) {
             console.error("Erro ao decodificar o token:", error);
-            localStorage.removeItem("token");
+            localStorage.removeItem("accessToken");
         }
     }
 });
+
+watch(formComSenha, () => {
+    errorMessage.value = "";
+}, { deep: true });
 </script>
