@@ -34,12 +34,12 @@
                                 <v-checkbox class="d-flex align-center" v-model="selectedItems"
                                     :value="pessoa"></v-checkbox>
                             </td>
-                            <td>{{ pessoa.name ?? tableMessage }}</td>
+                            <td>{{ formatName(pessoa.name) ?? tableMessage }}</td>
                             <td>{{ pessoa.email ?? tableMessage }}</td>
-                            <td>{{ pessoa.cpf ?? tableMessage }}</td>
+                            <td>{{ formatCpf(pessoa.cpf) ?? tableMessage }}</td>
                             <td>
                                 <div v-if="pessoa.phones && pessoa.phones.length" class="d-flex align-center">
-                                    {{ pessoa.phones[0].number ?? tableMessage }}
+                                    {{ formatPhoneNumber(pessoa.phones[0].number) ?? tableMessage }}
 
                                     <v-menu :model-value="menuAberto === pessoa.id"
                                         @update:model-value="toggleMenu(pessoa.id)" transition="slide-y-transition"
@@ -70,7 +70,7 @@
                                                 <v-list-item-title class="text-caption d-flex align-center">
                                                     <v-chip class="mr-2"
                                                         :color="isDarkTheme ? 'deep-purple-lighten-4' : 'blue'">
-                                                        {{ phone.number }}
+                                                        {{ formatPhoneNumber(phone.number) }}
                                                     </v-chip>
                                                     <v-spacer></v-spacer>
                                                     <span class="text-caption"
@@ -122,6 +122,7 @@ import DialogSave from '../dialogs/DialogSave.vue';
 import DialogDeleteSelect from '../dialogs/DialogDeleteSelect.vue';
 import api from '@/services/api';
 import { useTheme } from 'vuetify';
+import { formatPhoneNumber, formatCpf, formatName } from '../../services/FormatData'
 
 interface Pessoa {
     id?: string;

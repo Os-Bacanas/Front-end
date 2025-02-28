@@ -17,10 +17,10 @@
                         <tr v-for="usuario in displayedUsuarios" :key="usuario.email" class="table-row">
                             <td class="d-flex align-center">
                                 <v-icon class="mr-2 icon-color">mdi-account</v-icon>
-                                {{ usuario.name ?? tableMessage }}
+                                {{ formatName(usuario.name) ?? tableMessage }}
                             </td>
                             <td class="emailRow">{{ usuario.email ?? tableMessage }}</td>
-                            <td class="text-center">{{ usuario.cpf ?? tableMessage }}</td>
+                            <td class="text-center">{{ formatCpf(usuario.cpf) ?? tableMessage }}</td>
                         </tr>
                     </tbody>
                 </v-table>
@@ -34,6 +34,7 @@
 import { ref, watchEffect, onMounted, onUnmounted, nextTick } from 'vue';
 import api from '@/services/api';
 import { useTheme } from 'vuetify';
+import { formatCpf, formatName } from '../../services/FormatData'
 
 interface Usuario {
     name?: string;

@@ -11,7 +11,7 @@
                 <v-list-item>
                     <v-list-item-title class="text-body-1 font-weight-medium">{{ nameUser }}</v-list-item-title>
                     <v-list-item-subtitle>{{ emailUser }}</v-list-item-subtitle>
-                    <v-list-item-subtitle>{{ cpfUser }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ formatCpf(cpfUser) }}</v-list-item-subtitle>
                 </v-list-item>
                 <v-list-item class="align-center" size="x-large" #append><v-icon size="50" color="#0A84FF"
                         class="pl-9">mdi-account</v-icon></v-list-item>
@@ -33,6 +33,7 @@ import DeletarConta from './DeletarConta.vue';
 import Editar from './Editar.vue';
 import { jwtDecode } from 'jwt-decode';
 import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
+import { formatCpf } from '../../services/FormatData'
 
 const openMenu = ref(false);
 const token = localStorage.getItem('accessToken');
