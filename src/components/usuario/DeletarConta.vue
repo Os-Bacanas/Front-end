@@ -4,9 +4,9 @@
 
     <v-dialog v-model="isConfirmed" max-width="400">
         <v-card>
-            <v-container class="text-h6">
+            <v-container class="text-h6 d-flex align-center">
                 <v-icon class="mx-2 " color="red">mdi-close</v-icon>
-                <v-card-title>Deseja deletar a conta?</v-card-title>
+                <v-card-title class="pa-0">Deseja deletar a conta?</v-card-title>
             </v-container>
             <v-card-subtitle>Impossível recuperar os dados depois.</v-card-subtitle>
 

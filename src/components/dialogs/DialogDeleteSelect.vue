@@ -2,16 +2,16 @@
     <v-dialog v-model="deleteDialog" max-width="500">
         <template v-slot:activator="{ props: activatorProps }">
             <transition name="fade">
-                <v-btn color="red" prepend-icon="mdi-close" v-show="selectedItems && selectedItems.length !== 0" v-bind="activatorProps"
-                    @click="openDialog" variant="flat">
+                <v-btn color="red" prepend-icon="mdi-close" v-show="selectedItems && selectedItems.length !== 0"
+                    v-bind="activatorProps" @click="openDialog" variant="flat">
                     Deletar
                 </v-btn>
             </transition>
         </template>
         <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
-            <v-container class="text-h6">
+            <v-container class="text-h6 d-flex align-center">
                 <v-icon class="mx-2 " :color="isDarkTheme ? '#F44336' : '#D32F2F'">mdi-delete-forever</v-icon>
-                <v-title>Confirmar Exclusão</v-title>
+                <v-card-title class="pa-0">Confirmar Exclusão</v-card-title>
             </v-container>
             <v-card-text class="mb-n5">Tem certeza que deseja excluir os {{ selectedItems.length }} itens
                 selecionados?</v-card-text>
@@ -42,6 +42,13 @@ import { useTheme } from 'vuetify';
 interface Pessoa {
     email: string;
 }
+
+const props = defineProps({
+    selectedItems: {
+        type: Array,
+        required: true,
+    }
+});
 
 const deleteDialog = ref(false);
 const loading = ref(false);

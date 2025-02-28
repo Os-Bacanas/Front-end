@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card class="mx-10">
+        <v-card class="mx-10 elevation-3 rounded-lg">
             <div class="pa-4">
                 <v-card-title class="d-flex align-center pa-4">
                     <DialogDeleteSelect :selectedItems="selectedItems" @deleted="handleDelete"
@@ -44,7 +44,7 @@
 
                                     <v-menu :model-value="menuAberto === pessoa.id"
                                         @update:model-value="toggleMenu(pessoa.id)" transition="slide-y-transition"
-                                        max-height="200" width="270" close-on-content-click="false">
+                                        max-height="200" width="270" :close-on-content-click="false">
                                         <template v-slot:activator="{ props }">
                                             <v-icon class="transition-icon" v-bind="props" size="x-large"
                                                 @click="toggleMenu(pessoa.id)" @mouseover="menuAberto = pessoa.id">
@@ -90,9 +90,9 @@
                             </td>
                             <td>
                                 <div v-if="pessoa.phones && pessoa.phones.length">
-                                    {{ pessoa.phones[0].typePhoneDTO?.description ?? tableMessage }}
+                                    {{ pessoa.phones[0].typePhoneDTO?.description }}
                                 </div>
-                                <div v-else>
+                                <div v-if="!pessoa.phones[0].typePhoneDTO?.description">
                                     {{ tableMessage }}
                                 </div>
                             </td>

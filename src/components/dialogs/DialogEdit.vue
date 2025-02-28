@@ -19,7 +19,7 @@
             <v-card-text>
                 <v-row dense>
                     <v-col cols="12" md="4">
-                        <v-text-field label="Nome*" v-model="formBase.nome" :rules="[required]"></v-text-field>
+                        <v-text-field label="Nome*" v-model="formBase.name" :rules="[required]"></v-text-field>
                     </v-col>
 
                     <v-col cols="12" md="4">
@@ -69,7 +69,7 @@
 
                 <v-btn :color="isDarkTheme ? '#BB86FC' : '#1976D2'" text="Editar"
                     :variant="isDarkTheme ? 'flat' : 'tonal'" @click="putEdit"
-                    :disabled="!formBase.nome || !formBase.email || formBase.phones.some(phone => !phone.number) || loading" />
+                    :disabled="!formBase.name || !formBase.email || formBase.phones.some(phone => !phone.number) || loading" />
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -87,6 +87,7 @@ const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
 const dialog = ref(false);
 const loading = ref(false);
+const emit = defineEmits(["edit-success"]);
 
 const props = defineProps<{
     pessoa?: {
@@ -101,24 +102,22 @@ const props = defineProps<{
 function openDialog() {
     resetForm();
     dialog.value = true;
+    emit("edit-success");
 };
 
 function resetForm() {
     errorMessage.value = '';
     if (props.pessoa) {
-        Object.assign(formBase.value, props.pessoa);
+        formBase.value = JSON.parse(JSON.stringify(props.pessoa));
     } else {
         clean(formBase);
     }
 }
 
-
 function cancelEdit() {
     dialog.value = false;
     resetForm();
 };
-
-const emit = defineEmits(["edit-success"]);
 
 async function putEdit() {
     errorMessage.value = '';
@@ -136,7 +135,7 @@ async function putEdit() {
         }));
         await api.put('/pessoas', {
             id: formBase.value.id,
-            name: formBase.value.nome,
+            name: formBase.value.name,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
             phones: phonesData

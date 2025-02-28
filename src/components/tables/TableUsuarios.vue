@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card class="mx-10 rounded-lg">
+        <v-card class="mx-10 rounded-lg elevation-3">
             <div class="pa-4">
                 <v-table height="500px" fixed-header>
                     <thead class="text-button">

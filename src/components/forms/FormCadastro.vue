@@ -10,7 +10,7 @@
                 </v-alert>
 
                 <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
-                <v-text-field v-model="formComSenha.nome" density="compact" placeholder="Nome do usuário"
+                <v-text-field v-model="formComSenha.name" density="compact" placeholder="Nome do usuário"
                     variant="outlined" :rules="[required]" prepend-inner-icon="mdi-account-outline"></v-text-field>
 
 
@@ -41,7 +41,7 @@
 
 
                 <v-btn class="mt-3" color="blue" size="large" variant="tonal" block @click="postCadastro"
-                    :disabled="!formComSenha.nome || !formComSenha.cpf || !formComSenha.email || !formComSenha.password || !formComSenha.confirmPassword">Cadastra-se</v-btn>
+                    :disabled="!formComSenha.name || !formComSenha.cpf || !formComSenha.email || !formComSenha.password || !formComSenha.confirmPassword">Cadastra-se</v-btn>
 
 
                 <v-card-text class="text-end pt-10 mb-n5">
@@ -72,7 +72,7 @@ async function postCadastro() {
         if (!valid.value.email || !valid.value.cpf || !valid.value.password || !valid.value.confirmPassword) return errorMessage.value = "Erro ao fazer o cadastro. Verifique suas credenciais.";
 
         await api.post("/users/cadastro", {
-            name: formComSenha.value.nome,
+            name: formComSenha.value.name,
             cpf: formComSenha.value.cpf,
             email: formComSenha.value.email,
             senha: formComSenha.value.password,

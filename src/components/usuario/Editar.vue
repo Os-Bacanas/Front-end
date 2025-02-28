@@ -3,9 +3,9 @@
 
     <v-dialog v-model="isConfirmed" max-width="700">
         <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
-            <v-container class="text-h6">
-                <v-icon class="mx-2 " :color="isDarkTheme ? '#BB86FC' : '#1976D2'">mdi-pencil</v-icon>
-                <v-card-title>Editar conta</v-card-title>
+            <v-container class="text-h6 d-flex align-center">
+                <v-icon class="mx-2" :color="isDarkTheme ? '#BB86FC' : '#1976D2'">mdi-pencil</v-icon>
+                <v-card-title class="pa-0">Editar conta</v-card-title>
             </v-container>
             <v-alert v-if="errorMessage" type="error" class="mb-3" :variant="isDarkTheme ? 'elevated' : 'tonal'">
                 {{ errorMessage }}

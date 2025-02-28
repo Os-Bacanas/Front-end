@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 export const formBase = ref({
   id: "",
-  nome: "",
+  name: "",
   cpf: "",
   email: "",
   phones: [{ number: "", typePhoneDTO: { description: "" } }],

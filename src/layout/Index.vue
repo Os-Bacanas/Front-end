@@ -18,16 +18,16 @@
         <v-navigation-drawer v-model="isDrawerOpen">
             <v-list>
                 <v-list-item to="/usuarios">
-                    <v-container class="ma-n4">
-                        <v-icon class="mr-3" :color="isDarkTheme ? '#BB86FC' : 'blue-darken-1'">mdi-account</v-icon>
-                        <v-title>Usuários</v-title>
+                    <v-container class="ma-n4 d-flex">
+                        <v-icon class="mr-3 mb-" :color="isDarkTheme ? '#BB86FC' : 'blue-darken-1'">mdi-account</v-icon>
+                        <v-list-item-title>Usuários</v-list-item-title>
                     </v-container>
                 </v-list-item>
                 <v-list-item to="/pessoas">
-                    <v-container class="ma-n4">
-                        <v-icon class="mr-3"
+                    <v-container class="ma-n4 d-flex">
+                        <v-icon class="mr-3 mb-"
                             :color="isDarkTheme ? '#BB86FC' : 'blue-darken-1'">mdi-account-group</v-icon>
-                        <v-title>Pessoas</v-title>
+                        <v-list-item-title>Pessoas</v-list-item-title>
                     </v-container>
                 </v-list-item>
 

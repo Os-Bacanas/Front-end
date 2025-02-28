@@ -18,9 +18,9 @@ export function formatPhoneNumber(phone: string): string {
 
 export function formatName(name: string): string {
     return name
-        .split(' ') 
+        .split(' ')
         .map(part => {
             return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
         })
-        .join(' '); 
+        .join(' ');
 }

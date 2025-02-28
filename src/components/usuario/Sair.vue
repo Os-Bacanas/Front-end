@@ -1,8 +1,8 @@
 <template>
     <v-list-item @click="isConfirmed = true">
-        <v-container class="ml-n5 my-n3">
+        <v-container class="ml-n5 my-n3 d-flex">
             <v-icon class="mx-2 " color="red">mdi-logout</v-icon>
-            <v-title>Sair</v-title>
+            <v-list-item-title>Sair</v-list-item-title>
         </v-container>
     </v-list-item>
 

@@ -10,9 +10,9 @@
         </template>
 
         <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
-            <v-container class="text-h6">
+            <v-container class="text-h6 d-flex align-center">
                 <v-icon class="mx-2 " :color="isDarkTheme ? 'green-lighten-1' : 'green-darken-2'">mdi-account</v-icon>
-                <v-title>Cadastrar Pessoa</v-title>
+                <v-card-title class="pa-0">Cadastrar Pessoa</v-card-title>
             </v-container>
 
             <v-alert v-if="errorMessage" type="error" class="mb-3 mx-3" :variant="isDarkTheme ? 'elevated' : 'tonal'">
@@ -22,7 +22,7 @@
             <v-card-text>
                 <v-row dense>
                     <v-col cols="12" md="4" sm="6">
-                        <v-text-field label="Nome*" v-model="formBase.nome" :rules="[required]"></v-text-field>
+                        <v-text-field label="Nome*" v-model="formBase.name" :rules="[required]"></v-text-field>
                     </v-col>
 
                     <v-col cols="12" md="4" sm="6">
@@ -66,7 +66,7 @@
                 <v-btn text="Cancelar" variant="plain" @click="dialog = false" color="red"></v-btn>
 
                 <v-btn text="Salvar" :variant="isDarkTheme ? 'flat' : 'tonal'" @click="postSave"
-                    :disabled="!formBase.value.nome || !formBase.value.email || loading"
+                    :disabled="!formBase.email || !formBase.name || !formBase.cpf || loading"
                     :color="isDarkTheme ? 'green-lighten-1' : 'green-darken-2'">
                 </v-btn>
             </v-card-actions>
@@ -127,7 +127,7 @@ async function postSave() {
             },
         }));
         await api.post("/pessoas", {
-            name: formBase.value.nome,
+            name: formBase.value.name,
             email: formBase.value.email,
             cpf: formBase.value.cpf,
             phones: phonesData

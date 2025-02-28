@@ -29,6 +29,11 @@ export function cpfIsValid(value: string) {
     valid.value.cpf = false;
     return "CPF inválido";
   }
+  const regexCPF = /^(?!(\d)\1{10})\d{11}$/;
+  if (!regexCPF.test(cleanCPF)) {
+    valid.value.cpf = false;
+    return "CPF invalido";
+  }
   valid.value.cpf = true;
   return true;
 }
