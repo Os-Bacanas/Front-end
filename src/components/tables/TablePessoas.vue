@@ -41,22 +41,29 @@
                                 <div v-if="pessoa.phones && pessoa.phones.length" class="d-flex align-center">
                                     {{ pessoa.phones[0].number ?? tableMessage }}
 
-                                    <v-menu open-on-hover transition="slide-y-transition" max-height="200" width="270">
+                                    <v-menu :model-value="menuAberto === pessoa.id"
+                                        @update:model-value="toggleMenu(pessoa.id)" transition="slide-y-transition"
+                                        max-height="200" width="270" close-on-content-click="false">
                                         <template v-slot:activator="{ props }">
-                                            <v-icon class="transition-icon" v-bind="props" size="x-large">
+                                            <v-icon class="transition-icon" v-bind="props" size="x-large"
+                                                @click="toggleMenu(pessoa.id)" @mouseover="menuAberto = pessoa.id">
                                                 mdi-chevron-down
                                             </v-icon>
                                         </template>
 
-                                        <v-list class="menuColor">
+                                        <v-list class="menuColor" @mouseleave="menuAberto = null">
                                             <v-container class="d-flex ma-n3">
                                                 <v-list-subheader class="text-button font-weight-bold"
-                                                    :color="isDarkTheme ? 'white' : 'black'">Telefones</v-list-subheader>
+                                                    :color="isDarkTheme ? 'white' : 'black'">
+                                                    Telefones
+                                                </v-list-subheader>
 
                                                 <v-spacer></v-spacer>
 
                                                 <v-list-subheader class="text-button font-weight-bold mr-n5"
-                                                    :color="isDarkTheme ? 'white' : 'black'">Descrições</v-list-subheader>
+                                                    :color="isDarkTheme ? 'white' : 'black'">
+                                                    Descrições
+                                                </v-list-subheader>
                                             </v-container>
                                             <v-divider></v-divider>
                                             <v-list-item v-for="(phone, index) in pessoa.phones" :key="index">
@@ -68,7 +75,7 @@
                                                     <v-spacer></v-spacer>
                                                     <span class="text-caption"
                                                         style="font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                        {{ phone.typePhoneDTO?.description ?? tableMessage }}
+                                                        {{ phone.typePhoneDTO?.description ?? 'Não informado' }}
                                                     </span>
                                                 </v-list-item-title>
                                             </v-list-item>
@@ -116,7 +123,6 @@ import DialogDeleteSelect from '../dialogs/DialogDeleteSelect.vue';
 import api from '@/services/api';
 import { useTheme } from 'vuetify';
 
-
 interface Pessoa {
     id?: string;
     name?: string;
@@ -143,6 +149,7 @@ const displayedCount = ref(itemsPerPage);
 const isLoading = ref(false);
 const sentinela = ref(null);
 const tableMessage = 'Não informado';
+const menuAberto = ref<string | null>(null);
 
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !isLoading.value) {
@@ -152,6 +159,10 @@ const observer = new IntersectionObserver((entries) => {
     rootMargin: '50px',
     threshold: 1.0
 });
+
+function toggleMenu(id: string) {
+    menuAberto.value = menuAberto.value === id ? null : id;
+};
 
 async function fetchPessoas() {
     try {

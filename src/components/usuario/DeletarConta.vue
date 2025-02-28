@@ -10,11 +10,12 @@
             </v-container>
             <v-card-subtitle>Impossível recuperar os dados depois.</v-card-subtitle>
 
-            <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
+            <v-alert v-if="errorMessage" type="error" class="mb-3" :variant="isDarkTheme ? 'elevated' : 'tonal'">
                 {{ errorMessage }}
             </v-alert>
 
-            <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
+            <v-progress-linear v-if="loading" indeterminate
+                :color="isDarkTheme ? '#BB86FC' : 'primary'"></v-progress-linear>
 
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -62,7 +63,11 @@ async function confirmAction() {
         isConfirmed.value = false;
     } catch (error) {
         console.error('Erro ao deletar usuario: ', error)
-        errorMessage.value = "Não foi possível remover sua conta, tente mais tarde.";
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
+        }
     } finally {
         loading.value = false;
     }

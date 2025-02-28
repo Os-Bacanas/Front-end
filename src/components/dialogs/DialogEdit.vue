@@ -39,7 +39,8 @@
                             </v-col>
 
                             <v-col cols="12" md="6" class="py-1">
-                                <v-combobox :label="`Descrição ${index + 1}`" v-model="phone.typePhoneDTO.description"
+                                <v-combobox :label="`Descrição do telefone${index + 1}`"
+                                    v-model="phone.typePhoneDTO.description"
                                     :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
                                     placeholder="Selecione a descrição" />
                             </v-col>
@@ -59,7 +60,8 @@
                 :color="isDarkTheme ? '#BB86FC' : 'primary'"></v-progress-linear>
 
             <v-card-actions class="mt-2">
-                <v-btn @click="addPhone" color="blue" variant="tonal" size="small">Adicionar Telefone</v-btn>
+                <v-btn @click="addPhone" :color="isDarkTheme ? '#BB86FC' : '#1976D2'" variant="tonal"
+                    size="small"><v-icon>mdi-plus</v-icon> Telefone</v-btn>
 
                 <v-spacer></v-spacer>
 
@@ -85,6 +87,7 @@ const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
 const dialog = ref(false);
 const loading = ref(false);
+
 const props = defineProps<{
     pessoa?: {
         id: string;
@@ -139,7 +142,11 @@ async function putEdit() {
         window.location.reload();
     } catch (error) {
         console.error("Erro ao editar:", error);
-        errorMessage.value = "Erro ao editar. Tente novamente.";
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
+        }
     } finally {
         loading.value = false;
     }

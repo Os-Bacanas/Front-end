@@ -8,7 +8,7 @@
                 </v-btn>
             </transition>
         </template>
-        <v-card>
+        <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
             <v-container class="text-h6">
                 <v-icon class="mx-2 " :color="isDarkTheme ? '#F44336' : '#D32F2F'">mdi-delete-forever</v-icon>
                 <v-title>Confirmar Exclusão</v-title>
@@ -20,13 +20,14 @@
                 {{ errorMessage }}
             </v-alert>
 
-            <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
+            <v-progress-linear v-if="loading" indeterminate
+                :color="isDarkTheme ? '#BB86FC' : 'primary'"></v-progress-linear>
 
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="grey" @click="deleteDialog = false">Cancelar</v-btn>
                 <v-btn color="red" :disabled="loading" @click="deleteSelected"
-                    :variant="isDarkTheme ? 'tonal' : 'text'">Excluir</v-btn>
+                    :variant="isDarkTheme ? 'text' : 'outlined'">Excluir</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -72,7 +73,11 @@ async function deleteSelected() {
         window.location.reload();
     } catch (error) {
         console.error("Erro ao deletar pessoas:", error);
-        errorMessage.value = "Erro ao tentar deletar as pessoas . Tente novamente.";
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
+        }
     } finally {
         loading.value = false;
     }

@@ -9,7 +9,7 @@
             </v-card-actions>
         </template>
 
-        <v-card>
+        <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
             <v-container class="text-h6">
                 <v-icon class="mx-2 " :color="isDarkTheme ? 'green-lighten-1' : 'green-darken-2'">mdi-account</v-icon>
                 <v-title>Cadastrar Pessoa</v-title>
@@ -34,14 +34,14 @@
                         <v-text-field label="CPF" v-model="formBase.cpf" :rules="[cpfIsValid]"></v-text-field>
                     </v-col>
 
-                    <v-container>
+                    <v-container class="my-n4 ml-n1 mr-n10">
                         <v-row v-for="(phone, index) in items" :key="phone.id">
                             <v-col cols="12" md="4" sm="6">
-                                <v-text-field label="Telefone*" v-model="phone.number"
+                                <v-text-field :label="`Telefone ${index + 1}*`" v-model="phone.number"
                                     :rules="[required, telefoneIsValid]"></v-text-field>
                             </v-col>
                             <v-col>
-                                <v-combobox label="Descrição do Telefone"
+                                <v-combobox :label="`Descrição do telefone${index + 1}`"
                                     :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
                                     v-model="phone.typePhoneDTO.description"></v-combobox>
                             </v-col>
@@ -54,10 +54,12 @@
 
             <v-divider></v-divider>
 
-            <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
+            <v-progress-linear v-if="loading" indeterminate
+                :color="isDarkTheme ? '#BB86FC' : 'primary'"></v-progress-linear>
 
             <v-card-actions>
-                <v-btn @click="addItem" color="blue" variant="tonal" size="small">Mais telefones</v-btn>
+                <v-btn @click="addItem" color="blue" variant="tonal" size="small"><v-icon>mdi-plus</v-icon>
+                    Telefone</v-btn>
 
                 <v-spacer></v-spacer>
 
@@ -133,7 +135,11 @@ async function postSave() {
         window.location.reload();
     } catch (error) {
         console.error("Erro ao salvar:", error);
-        errorMessage.value = "Erro ao salvar. Tente novamente.";
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
+        }
     } finally {
         loading.value = false;
     }

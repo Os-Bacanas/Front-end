@@ -50,6 +50,15 @@ const isLoading = ref(false);
 const sentinela = ref<HTMLElement | null>(null);
 const tableMessage = 'Não informado';
 
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !isLoading.value) {
+        loadMoreUsuarios();
+    }
+}, {
+    rootMargin: '50px',
+    threshold: 0.1,
+});
+
 async function fetchUsuarios() {
     try {
         isLoading.value = true;
@@ -72,15 +81,6 @@ function loadMoreUsuarios() {
     }
 }
 
-const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !isLoading.value) {
-        loadMoreUsuarios();
-    }
-}, {
-    rootMargin: '50px',
-    threshold: 0.1,
-});
-
 watchEffect(() => {
     displayedUsuarios.value = usuarios.value.slice(0, displayedCount.value);
 });
@@ -91,7 +91,7 @@ onMounted(async () => {
     if (sentinela.value) {
         observer.observe(sentinela.value);
     }
-});
+})
 
 onUnmounted(() => {
     observer.disconnect();

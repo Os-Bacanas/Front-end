@@ -2,12 +2,12 @@
     <v-list-item title="Editar conta" prepend-icon="mdi-pencil" @click="openDialog()"></v-list-item>
 
     <v-dialog v-model="isConfirmed" max-width="700">
-        <v-card>
+        <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
             <v-container class="text-h6">
-                <v-icon class="mx-2 " color="blue">mdi-pencil</v-icon>
+                <v-icon class="mx-2 " :color="isDarkTheme ? '#BB86FC' : '#1976D2'">mdi-pencil</v-icon>
                 <v-title>Editar conta</v-title>
             </v-container>
-            <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
+            <v-alert v-if="errorMessage" type="error" class="mb-3" :variant="isDarkTheme ? 'elevated' : 'tonal'">
                 {{ errorMessage }}
             </v-alert>
 
@@ -29,12 +29,14 @@
             </v-card-text>
             <v-divider></v-divider>
 
-            <v-progress-linear v-if="loading" indeterminate color="primary"></v-progress-linear>
+            <v-progress-linear v-if="loading" indeterminate
+                :color="isDarkTheme ? '#BB86FC' : 'primary'"></v-progress-linear>
 
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="red" @click="isConfirmed = false">Cancelar</v-btn>
-                <v-btn color="green" @click="confirmAction" :variant="isDarkTheme ? 'tonal' : 'outlined'">Editar</v-btn>
+                <v-btn :color="isDarkTheme ? '#BB86FC' : '#1976D2'" @click="confirmAction"
+                    :variant="isDarkTheme ? 'tonal' : 'outlined'">Editar</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -47,6 +49,7 @@ import { errorMessage } from '@/services/Clean';
 import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
 import { required, emailIsValid, cpfIsValid } from '@/services/Validacao';
+import { formComSenha, valid } from '../../services/Campos'
 import { useTheme } from 'vuetify';
 
 const theme = useTheme();
@@ -90,6 +93,13 @@ function loadUserData() {
 async function confirmAction() {
     loading.value = true;
     errorMessage.value = '';
+
+    if (!valid.value.cpf) {
+        console.log(valid.value.email);
+        console.log(valid.value.cpf);
+        loading.value = false;
+        return errorMessage.value = "Erro ao editar. Verifique suas credenciais.";
+    }
     try {
         const response = await api.put('/users', {
             id: id.value,
@@ -105,7 +115,11 @@ async function confirmAction() {
         window.location.reload();
     } catch (error) {
         console.error("Erro ao fazer o PUT:", error);
-        errorMessage.value = "Não foi possível editar sua conta.";
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
+        }
     } finally {
         loading.value = false;
     }

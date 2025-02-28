@@ -1,12 +1,11 @@
 <template>
-
     <v-container class="fill-height d-flex justify-center">
         <div class="h-15 w-100">
             <v-card class="mx-auto pa-12 pb-8" elevation="6" max-width="448" rounded="lg">
 
                 <div class="text-h5  text-center text-grey-darken-1">CADASTRO</div>
 
-                <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
+                <v-alert v-if="errorMessage" type="error" variant="tonal">
                     {{ errorMessage }}
                 </v-alert>
 
@@ -53,7 +52,6 @@
             </v-card>
         </div>
     </v-container>
-
 </template>
 
 <script lang="ts" setup>
@@ -82,7 +80,11 @@ async function postCadastro() {
         router.push("/login");
     } catch (error) {
         console.error("Erro ao cadastrar:", error);
-        errorMessage.value = "Erro ao cadastrar. Tente novamente.";
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
+        }
     } finally {
         setTimeout(() => {
             errorMessage.value = "";

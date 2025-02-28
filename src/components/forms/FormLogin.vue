@@ -4,10 +4,9 @@
             <v-card class="mx-auto pa-12 pb-8" elevation="6" max-width="448" rounded="lg">
                 <div class="text-h5 text-center text-grey-darken-1">LOGIN</div>
 
-                <v-alert v-if="errorMessage" type="error" color="red-lighten-4">
+                <v-alert v-if="errorMessage" type="error" variant="tonal">
                     {{ errorMessage }}
                 </v-alert>
-
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
                 <v-text-field v-model="formComSenha.email" density="compact" placeholder="Digite seu email"
                     prepend-inner-icon="mdi-email-outline" variant="outlined" :rules="[required, emailIsValid]" />
@@ -62,7 +61,11 @@ async function postLogin() {
         router.push("/usuarios");
     } catch (error) {
         console.error("Erro ao fazer o login:", error);
-        errorMessage.value = "Erro ao fazer o login. Tente novamente.";
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente';
+        }
     } finally {
         isSubmitting.value = false;
         setTimeout(() => {

@@ -8,7 +8,8 @@
 
         <v-card min-width="300">
             <v-list class="d-flex">
-                <v-list-item :title="nameUser">
+                <v-list-item>
+                    <v-list-item-title class="text-body-1 font-weight-medium">{{ nameUser }}</v-list-item-title>
                     <v-list-item-subtitle>{{ emailUser }}</v-list-item-subtitle>
                     <v-list-item-subtitle>{{ cpfUser }}</v-list-item-subtitle>
                 </v-list-item>
@@ -35,8 +36,12 @@ import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
 
 const openMenu = ref(false);
 const token = localStorage.getItem('accessToken');
+const nameUser = computed(() => usuario.value.name);
+const emailUser = computed(() => usuario.value.email);
+const cpfUser = computed(() => usuario.value.cpf);
 
 let decodedToken: CustomJwtPayload | null = null;
+
 try {
     if (token) {
         decodedToken = jwtDecode<CustomJwtPayload>(token);
@@ -50,8 +55,4 @@ const usuario = ref({
     email: decodedToken?.email || "Email do usuário",
     cpf: decodedToken?.cpf || "CPF do usuário",
 });
-
-const nameUser = computed(() => usuario.value.name);
-const emailUser = computed(() => usuario.value.email);
-const cpfUser = computed(() => usuario.value.cpf);
 </script>
