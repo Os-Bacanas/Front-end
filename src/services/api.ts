@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance } from "axios";
 
 const api: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "https://api-estagio.up.railway.app",
 });
 
 api.interceptors.request.use(
