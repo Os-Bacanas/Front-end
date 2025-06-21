@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" max-width="700">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="icon-color" variant="text" v-bind="activatorProps" @click="openDialog">
+            <v-btn icon variant="text" v-bind="activatorProps" @click="openDialog" :style="{ color: isDarkTheme ? '#BB86FC' : '#1976D2' }">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn>
         </template>
@@ -23,8 +23,7 @@
                     </v-col>
 
                     <v-col cols="12" md="4">
-                        <v-text-field label="Email*" v-model="formBase.email"
-                            :rules="[required, emailIsValid]"></v-text-field>
+                        <v-text-field label="Email*" v-model="formBase.email" :rules="[required, emailIsValid]"></v-text-field>
                     </v-col>
 
                     <v-col cols="12" md="4">
@@ -39,7 +38,7 @@
                             </v-col>
 
                             <v-col cols="12" md="6" class="py-1">
-                                <v-combobox :label="`Descrição do telefone${index + 1}`"
+                                <v-combobox :label="`Descrição do telefone ${index + 1}`"
                                     v-model="phone.typePhoneDTO.description"
                                     :items="['Pessoal', 'Corporativo', 'Emergencial', 'Residencial']"
                                     placeholder="Selecione a descrição" />
@@ -56,12 +55,12 @@
                 </v-container>
             </v-card-text>
 
-            <v-progress-linear v-if="loading" indeterminate
-                :color="isDarkTheme ? '#BB86FC' : 'primary'"></v-progress-linear>
+            <v-progress-linear v-if="loading" indeterminate :color="isDarkTheme ? '#BB86FC' : 'primary'"></v-progress-linear>
 
             <v-card-actions class="mt-2">
-                <v-btn @click="addPhone" :color="isDarkTheme ? '#BB86FC' : '#1976D2'" variant="tonal"
-                    size="small"><v-icon>mdi-plus</v-icon> Telefone</v-btn>
+                <v-btn @click="addPhone" :color="isDarkTheme ? '#BB86FC' : '#1976D2'" variant="tonal" size="small">
+                    <v-icon>mdi-plus</v-icon> Telefone
+                </v-btn>
 
                 <v-spacer></v-spacer>
 
@@ -90,20 +89,20 @@ const loading = ref(false);
 const emit = defineEmits(["edit-success"]);
 
 const props = defineProps<{
-    pessoa?: {
-        id: string;
-        nome: string;
-        email: string;
-        cpf: string;
-        phones: Array<{ number: string, typePhoneDTO: { description: string } }>;
-    };
+  pessoa?: {
+    id?: string;
+    name?: string;
+    email?: string;
+    cpf?: string;
+    phones?: Array<{ number: string; typePhoneDTO?: { description: string } }>;
+  };
 }>();
+
 
 function openDialog() {
     resetForm();
     dialog.value = true;
-    emit("edit-success");
-};
+}
 
 function resetForm() {
     errorMessage.value = '';
@@ -117,17 +116,19 @@ function resetForm() {
 function cancelEdit() {
     dialog.value = false;
     resetForm();
-};
+}
 
 async function putEdit() {
     errorMessage.value = '';
     if (!props.pessoa) {
-        return dialog.value = false;
+        dialog.value = false;
+        return;
     }
     loading.value = true;
     try {
         if (!valid.value.email || !valid.value.telefone || !valid.value.cpf) {
-            return errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+            errorMessage.value = "Erro ao salvar. Verifique suas credenciais.";
+            return;
         }
         const phonesData = formBase.value.phones.map(phone => ({
             number: phone.number,
@@ -142,13 +143,13 @@ async function putEdit() {
         });
         dialog.value = false;
         emit("edit-success");
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erro ao editar:", error);
         errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {
         loading.value = false;
     }
-};
+}
 
 function addPhone() {
     const newPhone = { number: '', typePhoneDTO: { description: '' } };
@@ -163,12 +164,8 @@ watch(dialog, (newVal) => {
 </script>
 
 <style scoped>
-.icon-color {
-    color: v-bind('theme.global.current.value.dark ? "#BB86FC" : "#1976D2"');
-}
-
 .divider {
     opacity: 0.2;
-    background-color: v-bind('theme.global.current.value.dark ? "#FFFFFF" : "#000000"');
+    background-color: rgba(0, 0, 0, 0.2);
 }
 </style>

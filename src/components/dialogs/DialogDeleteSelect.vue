@@ -10,7 +10,7 @@
         </template>
         <v-card class="pa-4" :elevation="isDarkTheme ? 12 : 6" rounded="xl">
             <v-container class="text-h6 d-flex align-center">
-                <v-icon class="mx-2 " :color="isDarkTheme ? '#F44336' : '#D32F2F'">mdi-delete-forever</v-icon>
+                <v-icon class="mx-2" :color="isDarkTheme ? '#F44336' : '#D32F2F'">mdi-delete-forever</v-icon>
                 <v-card-title class="pa-0">Confirmar Exclusão</v-card-title>
             </v-container>
             <v-card-text class="mb-n5">Tem certeza que deseja excluir os {{ selectedItems.length }} itens
@@ -43,12 +43,9 @@ interface Pessoa {
     email: string;
 }
 
-const props = defineProps({
-    selectedItems: {
-        type: Array,
-        required: true,
-    }
-});
+const props = defineProps<{
+    selectedItems: Pessoa[];
+}>();
 
 const deleteDialog = ref(false);
 const loading = ref(false);
@@ -59,6 +56,7 @@ const emit = defineEmits(["delete-success"]);
 
 function openDialog() {
     errorMessage.value = '';
+    deleteDialog.value = true;  // Agora abre o diálogo
 }
 
 async function deleteSelected() {
@@ -67,11 +65,11 @@ async function deleteSelected() {
     loading.value = true;
 
     try {
-        const emailsToDelete = props.selectedItems.map((item: Pessoa) => item.email);
+        const emailsToDelete = props.selectedItems.map((item) => item.email);
         await api.delete('/pessoas/deletar-emails', { data: emailsToDelete });
         emit("delete-success");
         deleteDialog.value = false;
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erro ao deletar pessoas:", error);
         errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {

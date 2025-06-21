@@ -78,7 +78,7 @@ async function postCadastro() {
             senha: formComSenha.value.password,
         });
         router.push("/login");
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erro ao cadastrar:", error);
         errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     }

@@ -135,7 +135,7 @@ async function postSave() {
         dialog.value = false;
         clean(formBase);
         emit("save-success");
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erro ao salvar:", error);
         errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {

@@ -59,7 +59,7 @@ async function postLogin() {
         });
         localStorage.setItem("accessToken", response.data.accessToken);
         router.push("/usuarios");
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erro ao fazer o login:", error);
         errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {

@@ -1,4 +1,6 @@
-export function formatCpf(cpf: string): string {
+export function formatCpf(cpf?: string): string {
+    if (!cpf) return ''; // retorna string vazia se cpf for undefined ou vazio
+
     const cleaned = cpf.replace(/[^\d]/g, '');
     if (cleaned.length === 11) {
         // Formato: xxx.xxx.xxx-xx
@@ -6,6 +8,7 @@ export function formatCpf(cpf: string): string {
     }
     return cpf;
 }
+
 
 export function formatPhoneNumber(phone: string): string {
     const cleaned = phone.replace(/[^\d]/g, '');
@@ -16,11 +19,10 @@ export function formatPhoneNumber(phone: string): string {
     return phone;
 }
 
-export function formatName(name: string): string {
-    return name
-        .split(' ')
-        .map(part => {
-            return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-        })
-        .join(' ');
+export function formatName(name?: string): string {
+  if (!name) return ''; // retorna string vazia se name for undefined ou vazio
+  return name
+    .split(' ')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(' ');
 }

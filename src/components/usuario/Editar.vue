@@ -49,9 +49,11 @@ import { errorMessage } from '@/services/Clean';
 import { type CustomJwtPayload } from '@/services/LocalStorageVerification';
 import { jwtDecode } from 'jwt-decode';
 import { required, emailIsValid, cpfIsValid } from '@/services/Validacao';
-import { formComSenha, valid } from '../../services/Campos'
+import { valid } from '../../services/Campos'
 import { useTheme } from 'vuetify';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
 const isConfirmed = ref(false);
@@ -113,7 +115,7 @@ async function confirmAction() {
         }
         isConfirmed.value = false;
         window.location.reload();
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erro ao fazer o PUT:", error);
         errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {

@@ -40,6 +40,9 @@ const isConfirmed = ref(false);
 const loading = ref(false);
 const token = localStorage.getItem('accessToken');
 
+const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.current.value.dark);
+
 function openDialog() {
     errorMessage.value = "";
     isConfirmed.value = true;
@@ -61,7 +64,7 @@ async function confirmAction() {
         localStorage.removeItem("theme");
         router.push("/login");
         isConfirmed.value = false;
-    } catch (error) {
+    } catch (error: any) {
         console.error('Erro ao deletar usuario: ', error)
         errorMessage.value = error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente';
     } finally {

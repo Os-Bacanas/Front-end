@@ -118,10 +118,10 @@ import { useTheme } from 'vuetify';
 import { formatPhoneNumber, formatCpf, formatName } from '../../services/FormatData'
 
 interface Pessoa {
-    id?: string;
-    name?: string;
+    id: string;        // Agora obrigatório
+    name: string;      // Obrigatório
     email: string;
-    cpf?: string;
+    cpf: string;       // Obrigatório
     phones: Phone[];
 }
 
@@ -169,13 +169,15 @@ async function fetchPessoas() {
         isLoading.value = true;
         const response = await api.get('/pessoas');
         pessoas.value = response.data.map((person: any) => ({
-            id: person.id,
-            name: person.name,
+            id: person.id ?? '',
+            name: person.name ?? '',
             email: person.email,
-            cpf: person.cpf,
+            cpf: person.cpf ?? '',
             phones: person.phones ? person.phones.map((phone: any) => ({
-                number: phone.number,
-                typePhoneDTO: phone.typePhoneDTO ? { description: phone.typePhoneDTO.description } : undefined
+                number: phone.number ?? '',
+                typePhoneDTO: { 
+                    description: phone.typePhoneDTO?.description ?? 'Não informado' 
+                }
             })) : []
         }));
     } catch (error) {
@@ -222,6 +224,7 @@ onUnmounted(() => {
     observer.disconnect();
 });
 </script>
+
 
 <style scoped>
 .no-width {
